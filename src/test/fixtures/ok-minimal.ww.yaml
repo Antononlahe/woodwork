@@ -1,0 +1,38 @@
+format: woodwork/v0
+id: ok-minimal
+title: Minimal block
+summary: A tiny box and a peg.
+difficulty: easy
+time_minutes: 10
+finished_size: { x: 40, y: 40, z: 30 }
+
+parts:
+  - id: block
+    kind: box
+    size: { x: 20, y: 20, z: 4 }
+    holes:
+      - id: peg-hole
+        diameter: 4
+        depth: 4
+        at: { x: 10, y: 10, z: 4 }
+        dir: -z
+  - id: peg
+    kind: dowel
+    diameter: 4
+    length: 20
+
+assembly:
+  - part: block
+    at: { x: 0, y: 0, z: 0 }
+  - part: peg
+    at: { x: 10, y: 10, z: 4 }
+
+steps:
+  - id: drill
+    title: Drill the block
+    body: Drill a 4mm hole in the center.
+    show: [block]
+    highlight: [block.peg-hole]
+    join:
+      - from: peg
+        into: block.peg-hole

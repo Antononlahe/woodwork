@@ -1,0 +1,22 @@
+format: woodwork/v0
+id: bad-ref
+title: Bad ref
+summary: Points at a part that does not exist.
+difficulty: easy
+time_minutes: 5
+finished_size: { x: 20, y: 20, z: 20 }
+
+parts:
+  - id: block
+    kind: box
+    size: { x: 10, y: 10, z: 10 }
+
+assembly:
+  - part: block
+    at: { x: 0, y: 0, z: 0 }
+
+steps:
+  - id: ghost
+    title: Show a ghost
+    body: This step names a missing part.
+    show: [nope]

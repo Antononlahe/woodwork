@@ -1,0 +1,37 @@
+format: woodwork/v0
+id: bad-join
+title: Bad join
+summary: Dowel does not fit the hole.
+difficulty: easy
+time_minutes: 5
+finished_size: { x: 30, y: 30, z: 40 }
+
+parts:
+  - id: block
+    kind: box
+    size: { x: 20, y: 20, z: 10 }
+    holes:
+      - id: socket
+        diameter: 4
+        depth: 8
+        at: { x: 10, y: 10, z: 10 }
+        dir: -z
+  - id: peg
+    kind: dowel
+    diameter: 8
+    length: 20
+
+assembly:
+  - part: block
+    at: { x: 0, y: 0, z: 0 }
+  - part: peg
+    at: { x: 10, y: 10, z: 10 }
+
+steps:
+  - id: glue
+    title: Glue the peg
+    body: This peg is too fat.
+    show: [block, peg]
+    join:
+      - from: peg
+        into: block.socket
