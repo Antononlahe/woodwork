@@ -1,9 +1,18 @@
-import { Bounds, Grid, OrbitControls, OrthographicCamera, Outlines, PerspectiveCamera } from "@react-three/drei";
+import { Edges, Grid, Line, OrbitControls, OrthographicCamera, PerspectiveCamera } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useMemo } from "react";
+import { DoubleSide } from "three";
+import { worldAabb } from "../plan/aabb";
 import type { Plan } from "../plan/types";
 import { buildPart, woodColor } from "./buildPart";
+import { FitCamera } from "./FitCamera";
 import { assemblyPosition, assemblyQuaternion } from "./pose";
+import { PartDimensions } from "./Dimensions";
+import { currentIds, dimensionedIds, highlightedHoleIds, incomingIds, visibleIds } from "./stepView";
+import { worldPointOnPart } from "./world";
+
+const NOW = "#e06712";
+const NEXT = "#1f6feb";
 
 export type ViewMode = "orbit" | "iso";
 
@@ -11,21 +20,24 @@ type PlanSceneProps = {
   plan: Plan;
   view: ViewMode;
   stepIndex: number;
+  showGrid?: boolean;
+  interactive?: boolean;
+  showDimensions?: boolean;
 };
 
-function visibleIds(plan: Plan, stepIndex: number): Set<string> | null {
-  if (stepIndex >= plan.steps.length) return null;
-  return new Set(plan.steps[stepIndex].show);
-}
-
-function highlightRefs(plan: Plan, stepIndex: number): Set<string> {
-  if (stepIndex >= plan.steps.length) return new Set();
-  return new Set(plan.steps[stepIndex].highlight ?? []);
-}
-
-function Assembly({ plan, stepIndex }: { plan: Plan; stepIndex: number }) {
+function Assembly({
+  plan,
+  stepIndex,
+  showDimensions,
+}: {
+  plan: Plan;
+  stepIndex: number;
+  showDimensions: boolean;
+}) {
   const show = visibleIds(plan, stepIndex);
-  const highlights = highlightRefs(plan, stepIndex);
+  const incoming = incomingIds(plan, stepIndex);
+  const current = currentIds(plan, stepIndex);
+  const measured = dimensionedIds(plan, stepIndex);
   const byId = useMemo(() => new Map(plan.parts.map((p) => [p.id, p])), [plan]);
   const built = useMemo(() => {
     const map = new Map<string, ReturnType<typeof buildPart>>();
@@ -39,21 +51,39 @@ function Assembly({ plan, stepIndex }: { plan: Plan; stepIndex: number }) {
         const part = byId.get(item.part);
         const mesh = built.get(item.part);
         if (!part || !mesh) return null;
-        if (show && !show.has(part.id)) return null;
+        const isIncoming = incoming.has(part.id);
+        const isSolid = !show || show.has(part.id);
+        if (!isSolid && !isIncoming) return null;
         const pos = assemblyPosition(item.at);
         const quat = assemblyQuaternion(item.rot);
-        const marked = highlights.has(part.id) || [...highlights].some((h) => h.startsWith(`${part.id}.`));
+        const isNow = !isIncoming && current.has(part.id);
         return (
           <group key={`${item.part}-${item.at.x}-${item.at.y}-${item.at.z}`} position={pos} quaternion={quat}>
-            <mesh geometry={mesh.geometry} castShadow receiveShadow>
-              <meshStandardMaterial color={woodColor(part)} roughness={0.82} metalness={0} />
-              {marked ? <Outlines thickness={2.2} color="#6b2d12" /> : null}
+            <mesh geometry={mesh.geometry}>
+              {isIncoming ? (
+                <meshBasicMaterial color={NEXT} transparent opacity={0.14} depthWrite={false} toneMapped={false} />
+              ) : isNow ? (
+                <meshStandardMaterial
+                  color="#f0c48a"
+                  roughness={0.58}
+                  metalness={0}
+                  emissive={NOW}
+                  emissiveIntensity={0.28}
+                  side={DoubleSide}
+                />
+              ) : (
+                <meshStandardMaterial color={woodColor(part)} roughness={0.72} metalness={0} side={DoubleSide} />
+              )}
+              {isIncoming ? <Edges color={NEXT} threshold={18} /> : null}
+              {isNow ? <Edges color={NOW} threshold={18} /> : null}
             </mesh>
-            {mesh.extras.map((geo, i) => (
-              <mesh key={i} geometry={geo}>
-                <meshStandardMaterial color="#3a2416" />
-              </mesh>
-            ))}
+            {showDimensions && !isIncoming ? (
+              <PartDimensions
+                part={part}
+                body={measured.has(part.id)}
+                holes={highlightedHoleIds(plan, stepIndex, part.id)}
+              />
+            ) : null}
           </group>
         );
       })}
@@ -61,34 +91,108 @@ function Assembly({ plan, stepIndex }: { plan: Plan; stepIndex: number }) {
   );
 }
 
-export function PlanScene({ plan, view, stepIndex }: PlanSceneProps) {
+function OverallDimensions({ plan, ids }: { plan: Plan; ids: Set<string> }) {
+  const byId = new Map(plan.parts.map((p) => [p.id, p]));
+  let min = { x: Infinity, y: Infinity, z: Infinity };
+  let max = { x: -Infinity, y: -Infinity, z: -Infinity };
+  for (const item of plan.assembly) {
+    if (!ids.has(item.part)) continue;
+    const part = byId.get(item.part);
+    if (!part) continue;
+    const box = worldAabb(part, item);
+    min = {
+      x: Math.min(min.x, box.min.x),
+      y: Math.min(min.y, box.min.y),
+      z: Math.min(min.z, box.min.z),
+    };
+    max = {
+      x: Math.max(max.x, box.max.x),
+      y: Math.max(max.y, box.max.y),
+      z: Math.max(max.z, box.max.z),
+    };
+  }
+  if (!Number.isFinite(min.x)) return null;
+  const size = { x: max.x - min.x, y: max.y - min.y, z: max.z - min.z };
   return (
-    <Canvas shadows gl={{ antialias: true, preserveDrawingBuffer: true }} style={{ background: "#e8d7b8" }}>
+    <group position={assemblyPosition(min)}>
+      <PartDimensions part={{ id: "overall", kind: "box", size }} body holes={[]} />
+    </group>
+  );
+}
+
+function NextJoins({ plan, stepIndex }: { plan: Plan; stepIndex: number }) {
+  const joins = stepIndex + 1 < plan.steps.length ? (plan.steps[stepIndex + 1].join ?? []) : [];
+  const lines = [];
+  for (const [i, join] of joins.entries()) {
+    const a = worldPointOnPart(plan, join.from);
+    const b = worldPointOnPart(plan, join.into);
+    if (a && b) lines.push({ key: `${join.from}-${join.into}-${i}`, a, b });
+  }
+
+  return (
+    <group>
+      {lines.map((line) => (
+        <Line
+          key={line.key}
+          points={[line.a, line.b]}
+          color={NEXT}
+          dashed
+          dashSize={4}
+          gapSize={3}
+          lineWidth={2}
+        />
+      ))}
+    </group>
+  );
+}
+
+export function PlanScene({
+  plan,
+  view,
+  stepIndex,
+  showGrid = true,
+  interactive = true,
+  showDimensions = true,
+}: PlanSceneProps) {
+  return (
+    <Canvas gl={{ antialias: true, preserveDrawingBuffer: true }} style={{ background: "#e8d7b8" }}>
       {view === "orbit" ? (
-        <PerspectiveCamera makeDefault position={[180, 160, 180]} fov={40} near={0.1} far={4000} />
+        <PerspectiveCamera makeDefault position={[180, 160, 180]} fov={38} near={0.1} far={4000} />
       ) : (
-        <OrthographicCamera makeDefault position={[220, 220, 220]} zoom={2.4} near={0.1} far={4000} />
+        <OrthographicCamera makeDefault position={[220, 220, 220]} zoom={1} near={0.1} far={4000} />
       )}
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[120, 220, 80]} intensity={1.15} castShadow />
-      <directionalLight position={[-80, 80, -40]} intensity={0.25} />
-      <Bounds fit clip observe margin={1.35}>
-        <Assembly plan={plan} stepIndex={stepIndex} />
-      </Bounds>
-      <Grid
-        infiniteGrid
-        fadeDistance={600}
-        sectionColor="#8a6a3a"
-        cellColor="#c4a574"
-        sectionSize={50}
-        cellSize={10}
-      />
+      <ambientLight intensity={0.95} />
+      <hemisphereLight args={["#fff4dd", "#c4a574", 0.55]} />
+      <directionalLight position={[120, 220, 80]} intensity={0.85} />
+      <directionalLight position={[-80, 80, -40]} intensity={0.35} />
+      <Assembly plan={plan} stepIndex={stepIndex} showDimensions={showDimensions} />
+      {showDimensions &&
+      stepIndex < plan.steps.length - 1 &&
+      dimensionedIds(plan, stepIndex).size === 0 ? (
+        <OverallDimensions
+          plan={plan}
+          ids={visibleIds(plan, stepIndex) ?? new Set(plan.parts.map((p) => p.id))}
+        />
+      ) : null}
+      <NextJoins plan={plan} stepIndex={stepIndex} />
+      {showGrid ? (
+        <Grid
+          infiniteGrid
+          fadeDistance={700}
+          sectionColor="#8a6a3a"
+          cellColor="#c4a574"
+          sectionSize={50}
+          cellSize={10}
+        />
+      ) : null}
+      <FitCamera plan={plan} stepIndex={stepIndex} view={view} />
       <OrbitControls
         makeDefault
-        enableRotate={view === "orbit"}
-        enablePan={view === "orbit"}
-        minDistance={40}
-        maxDistance={800}
+        enableRotate={interactive && view === "orbit"}
+        enablePan={interactive && view === "orbit"}
+        enableZoom={interactive}
+        minDistance={20}
+        maxDistance={900}
       />
     </Canvas>
   );

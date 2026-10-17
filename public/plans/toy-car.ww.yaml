@@ -1,0 +1,148 @@
+format: woodwork/v0
+id: toy-car
+title: Toy car
+summary: A little wooden car with wheels that roll.
+difficulty: easy
+time_minutes: 50
+finished_size: { x: 130, y: 90, z: 50 }
+
+parts:
+  - id: chassis
+    kind: box
+    size: { x: 120, y: 50, z: 12 }
+    holes:
+      - id: axle-front
+        diameter: 8
+        through: true
+        at: { x: 25, y: 0, z: 6 }
+        dir: +y
+      - id: axle-rear
+        diameter: 8
+        through: true
+        at: { x: 95, y: 0, z: 6 }
+        dir: +y
+
+  - id: cabin
+    kind: box
+    size: { x: 40, y: 40, z: 24 }
+
+  - id: axle-front
+    kind: dowel
+    diameter: 8
+    length: 82
+  - id: axle-rear
+    kind: dowel
+    diameter: 8
+    length: 82
+
+  - id: wheel-fl
+    kind: disk
+    diameter: 36
+    thickness: 12
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+  - id: wheel-fr
+    kind: disk
+    diameter: 36
+    thickness: 12
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+  - id: wheel-rl
+    kind: disk
+    diameter: 36
+    thickness: 12
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+  - id: wheel-rr
+    kind: disk
+    diameter: 36
+    thickness: 12
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+
+assembly:
+  - part: chassis
+    at: { x: 0, y: 0, z: 0 }
+  - part: cabin
+    at: { x: 50, y: 5, z: 12 }
+  - part: axle-front
+    at: { x: 25, y: -16, z: 6 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: axle-rear
+    at: { x: 95, y: -16, z: 6 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: wheel-fl
+    at: { x: 25, y: -10, z: 6 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: wheel-fr
+    at: { x: 25, y: 60, z: 6 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: wheel-rl
+    at: { x: 95, y: -10, z: 6 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: wheel-rr
+    at: { x: 95, y: 60, z: 6 }
+    rot: { x: -90, y: 0, z: 0 }
+
+steps:
+  - id: cut-chassis
+    title: Cut the chassis
+    body: Cut a 120 by 50mm deck from 12mm vineer. Drill two 8mm holes through the width for the axles, 25mm from each end. Drill from both sides so the bit meets in the middle.
+    show: [chassis]
+    highlight: [chassis.axle-front, chassis.axle-rear]
+
+  - id: cut-cabin
+    title: Cut the cabin
+    body: Cut a 40 by 40mm cabin. Two 12mm pieces glued together is fine. Glue it on the deck, a little back from the middle. Keep it square.
+    show: [chassis, cabin]
+
+  - id: cut-wheels
+    title: Cut the wheels
+    body: Cut four 36mm disks from 12mm vineer. Drill an 8mm hole through the center of each.
+    show: [wheel-fl]
+    highlight: [wheel-fl.bore]
+
+  - id: fit-front
+    title: Fit the front axle
+    body: Slide the 8mm axle through one wheel, the chassis, then the other wheel. Glue each wheel to the axle. Leave a sliver of air so the wheels do not rub the deck. Sand the chassis hole until the whole axle spins.
+    show: [chassis, cabin, axle-front, wheel-fl, wheel-fr]
+    join:
+      - from: axle-front
+        into: chassis.axle-front
+      - from: axle-front
+        into: wheel-fl.bore
+      - from: axle-front
+        into: wheel-fr.bore
+
+  - id: fit-rear
+    title: Fit the rear axle
+    body: Same as the front. A little axle should stick out past each wheel.
+    show: [chassis, cabin, axle-front, axle-rear, wheel-fl, wheel-fr, wheel-rl, wheel-rr]
+    join:
+      - from: axle-rear
+        into: chassis.axle-rear
+      - from: axle-rear
+        into: wheel-rl.bore
+      - from: axle-rear
+        into: wheel-rr.bore
+
+  - id: roll-check
+    title: Give it a push
+    body: You should have a deck, a cabin, two axles, and four wheels. Set it on the table and push. If a hole binds, sand it. Compare it to the finished picture in the corner.
+    show: [chassis, cabin, axle-front, axle-rear, wheel-fl, wheel-fr, wheel-rl, wheel-rr]

@@ -1,8 +1,32 @@
 [
   {
+    "id": "tabletop-castle",
+    "title": "Tabletop castle",
+    "file": "tabletop-castle.ww.yaml",
+    "summary": "A detailed curtain-wall fortress. Drum towers, grate, keep, well, shed."
+  },
+  {
     "id": "tabletop-windmill",
     "title": "Tabletop windmill",
     "file": "tabletop-windmill.ww.yaml",
     "summary": "A small windmill that actually spins."
+  },
+  {
+    "id": "toy-car",
+    "title": "Toy car",
+    "file": "toy-car.ww.yaml",
+    "summary": "A little wooden car with wheels that roll."
+  },
+  {
+    "id": "phone-stand",
+    "title": "Phone stand",
+    "file": "phone-stand.ww.yaml",
+    "summary": "A desk stand that holds a phone and keeps the cable tidy."
+  },
+  {
+    "id": "tabletop-rocket",
+    "title": "Tabletop rocket",
+    "file": "tabletop-rocket.ww.yaml",
+    "summary": "A little wooden rocket on a stick. Fins, a window, a nose."
   }
 ]

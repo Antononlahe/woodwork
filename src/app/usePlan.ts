@@ -36,6 +36,24 @@ export function useCatalog(): CatalogEntry[] {
   return entries;
 }
 
+export function useCatalogPlan(file: string | undefined): Plan | undefined {
+  const [plan, setPlan] = useState<Plan | undefined>();
+  useEffect(() => {
+    if (!file) return;
+    let cancelled = false;
+    void fetch(`/plans/${file}`)
+      .then((r) => r.text())
+      .then((text) => {
+        if (cancelled) return;
+        setPlan(loadPlanText(text).plan);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [file]);
+  return plan;
+}
+
 export function usePlan(source: PlanSource): PlanState {
   const catalog = useCatalog();
   const [state, setState] = useState<PlanState>({ diagnostics: [], status: "loading" });

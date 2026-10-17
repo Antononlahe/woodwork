@@ -66,7 +66,72 @@ const ringPart = z.object({
   holes: z.array(holeSchema).optional(),
 });
 
-const partSchema = z.discriminatedUnion("kind", [boxPart, dowelPart, diskPart, ringPart]);
+const conePart = z.object({
+  id: z.string().min(1),
+  kind: z.literal("cone"),
+  diameter: z.number().positive(),
+  height: z.number().positive(),
+  holes: z.array(holeSchema).optional(),
+});
+
+const wedgePart = z.object({
+  id: z.string().min(1),
+  kind: z.literal("wedge"),
+  size: z.object({
+    x: z.number().positive(),
+    y: z.number().positive(),
+    z: z.number().positive(),
+  }),
+  holes: z.array(holeSchema).optional(),
+});
+
+const archPart = z.object({
+  id: z.string().min(1),
+  kind: z.literal("arch"),
+  size: z.object({
+    x: z.number().positive(),
+    y: z.number().positive(),
+    z: z.number().positive(),
+  }),
+  opening: z.object({
+    width: z.number().positive(),
+    height: z.number().positive(),
+  }),
+  holes: z.array(holeSchema).optional(),
+});
+
+const stairsPart = z.object({
+  id: z.string().min(1),
+  kind: z.literal("stairs"),
+  width: z.number().positive(),
+  rise: z.number().positive(),
+  run: z.number().positive(),
+  count: z.number().int().positive(),
+  holes: z.array(holeSchema).optional(),
+});
+
+const merlonPart = z.object({
+  id: z.string().min(1),
+  kind: z.literal("merlon"),
+  size: z.object({
+    x: z.number().positive(),
+    y: z.number().positive(),
+    z: z.number().positive(),
+  }),
+  holes: z.array(holeSchema).optional(),
+});
+
+const partSchema = z.discriminatedUnion("kind", [
+  boxPart,
+  dowelPart,
+  diskPart,
+  ringPart,
+  conePart,
+  wedgePart,
+  archPart,
+  stairsPart,
+  merlonPart,
+]);
 
 export const planSchema: z.ZodType<Plan> = z
   .object({
@@ -81,6 +146,7 @@ export const planSchema: z.ZodType<Plan> = z
       y: z.number().positive(),
       z: z.number().positive(),
     }),
+    iso_from: vec3.optional(),
     parts: z.array(partSchema).min(1),
     assembly: z.array(
       z.object({
@@ -135,6 +201,22 @@ export const planSchema: z.ZodType<Plan> = z
           message: "ring inner must be less than outer",
           path: ["parts", i, "inner"],
         });
+      }
+      if (part.kind === "arch") {
+        if (part.opening.width >= part.size.x) {
+          ctx.addIssue({
+            code: "custom",
+            message: "arch opening wider than the wall",
+            path: ["parts", i, "opening", "width"],
+          });
+        }
+        if (part.opening.height >= part.size.z) {
+          ctx.addIssue({
+            code: "custom",
+            message: "arch opening taller than the wall",
+            path: ["parts", i, "opening", "height"],
+          });
+        }
       }
     }
     const stepIds = new Set<string>();

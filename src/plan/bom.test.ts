@@ -20,6 +20,6 @@ test("groups two identical dowels", () => {
   };
   const bom = computeBom(plan);
   expect(bom).toEqual([
-    { key: "dowel|d=3|l=16", kind: "dowel", label: "dowel Ø3 × 16mm", qty: 2 },
+    { key: "dowel|d=3|l=16", kind: "dowel", label: "dowel Ø3 × 16mm", qty: 2, sampleId: "a" },
   ]);
 });

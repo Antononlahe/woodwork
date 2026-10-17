@@ -1,0 +1,178 @@
+format: woodwork/v0
+id: phone-stand
+title: Phone stand
+summary: A desk stand that holds a phone and keeps the cable tidy.
+difficulty: easy
+time_minutes: 40
+finished_size: { x: 110, y: 90, z: 110 }
+iso_from: { x: 1, y: 1, z: 0.82 }
+
+parts:
+  - id: base
+    kind: box
+    size: { x: 100, y: 70, z: 12 }
+    holes:
+      - id: back-a
+        diameter: 8
+        depth: 8
+        at: { x: 25, y: 6, z: 12 }
+        dir: -z
+      - id: back-b
+        diameter: 8
+        depth: 8
+        at: { x: 75, y: 6, z: 12 }
+        dir: -z
+      - id: lip-a
+        diameter: 8
+        depth: 8
+        at: { x: 25, y: 32, z: 12 }
+        dir: -z
+      - id: lip-b
+        diameter: 8
+        depth: 8
+        at: { x: 75, y: 32, z: 12 }
+        dir: -z
+
+  - id: back
+    kind: box
+    size: { x: 100, y: 12, z: 80 }
+    holes:
+      - id: peg-a
+        diameter: 8
+        depth: 10
+        at: { x: 25, y: 6, z: 0 }
+        dir: +z
+      - id: peg-b
+        diameter: 8
+        depth: 10
+        at: { x: 75, y: 6, z: 0 }
+        dir: +z
+      - id: hook
+        diameter: 8
+        through: true
+        at: { x: 50, y: 0, z: 52 }
+        dir: +y
+
+  - id: lip
+    kind: box
+    size: { x: 100, y: 16, z: 12 }
+    holes:
+      - id: peg-a
+        diameter: 8
+        depth: 8
+        at: { x: 25, y: 8, z: 0 }
+        dir: +z
+      - id: peg-b
+        diameter: 8
+        depth: 8
+        at: { x: 75, y: 8, z: 0 }
+        dir: +z
+
+  - id: back-peg-a
+    kind: dowel
+    diameter: 8
+    length: 16
+  - id: back-peg-b
+    kind: dowel
+    diameter: 8
+    length: 16
+  - id: lip-peg-a
+    kind: dowel
+    diameter: 8
+    length: 16
+  - id: lip-peg-b
+    kind: dowel
+    diameter: 8
+    length: 16
+  - id: hook
+    kind: dowel
+    diameter: 8
+    length: 28
+
+  - id: tidy
+    kind: ring
+    outer: 24
+    inner: 8
+    thickness: 6
+
+assembly:
+  - part: base
+    at: { x: 0, y: 0, z: 0 }
+  - part: back
+    at: { x: 0, y: 0, z: 12 }
+  - part: lip
+    at: { x: 0, y: 24, z: 12 }
+  - part: back-peg-a
+    at: { x: 25, y: 6, z: 4 }
+  - part: back-peg-b
+    at: { x: 75, y: 6, z: 4 }
+  - part: lip-peg-a
+    at: { x: 25, y: 32, z: 4 }
+  - part: lip-peg-b
+    at: { x: 75, y: 32, z: 4 }
+  - part: hook
+    at: { x: 50, y: -4, z: 64 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: tidy
+    at: { x: 50, y: 18, z: 64 }
+    rot: { x: -90, y: 0, z: 0 }
+
+steps:
+  - id: cut-base
+    title: Cut the base
+    body: Cut a 100 by 70mm board from 12mm vineer. Drill two 8mm holes near the back edge and two 8mm holes a little forward, for the lip.
+    show: [base]
+    highlight: [base.back-a, base.lip-a]
+
+  - id: cut-back
+    title: Cut the back
+    body: Cut a 100 by 80mm upright from 12mm vineer. Drill two 8mm pockets in the bottom edge. Drill an 8mm hole through the face for the cable hook.
+    show: [back]
+    highlight: [back.peg-a, back.hook]
+
+  - id: stand-back
+    title: Stand the back
+    body: Glue the 8mm pegs through the base into the back. Keep the back square to the base.
+    show: [base, back, back-peg-a, back-peg-b]
+    join:
+      - from: back-peg-a
+        into: base.back-a
+      - from: back-peg-a
+        into: back.peg-a
+      - from: back-peg-b
+        into: base.back-b
+      - from: back-peg-b
+        into: back.peg-b
+
+  - id: cut-lip
+    title: Cut the lip
+    body: Cut a 100 by 16mm strip. This is the ledge. Drill two 8mm holes. The gap behind it is where the phone sits.
+    show: [lip]
+    highlight: [lip.peg-a]
+
+  - id: glue-lip
+    title: Glue the lip
+    body: Peg the lip onto the base, about 12mm in front of the back. That slot is for the phone.
+    show: [base, back, lip, lip-peg-a, lip-peg-b]
+    join:
+      - from: lip-peg-a
+        into: base.lip-a
+      - from: lip-peg-a
+        into: lip.peg-a
+      - from: lip-peg-b
+        into: base.lip-b
+      - from: lip-peg-b
+        into: lip.peg-b
+
+  - id: hook-ring
+    title: Add the cable hook
+    body: Push the 8mm hook through the back. Slide the ring on from the front and glue the hook in. Drape the cable over the hook.
+    show: [back, hook, tidy]
+    join:
+      - from: hook
+        into: back.hook
+
+  - id: park-phone
+    title: Park a phone
+    body: You should have a base, an upright back, a lip in front, and the cable hook. Stand a phone in the slot. It should lean on the back and stay put. Compare it to the finished picture in the corner.
+    show: [base, back, lip, back-peg-a, back-peg-b, lip-peg-a, lip-peg-b, hook, tidy]

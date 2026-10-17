@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { CatalogCard } from "./CatalogCard";
 import { LOCAL_PLAN_KEY, useCatalog } from "./usePlan";
 
 export function Home() {
@@ -11,7 +12,7 @@ export function Home() {
     const reader = new FileReader();
     reader.onload = () => {
       sessionStorage.setItem(LOCAL_PLAN_KEY, String(reader.result));
-      void navigate("/local");
+      void navigate("/local/prep");
     };
     reader.readAsText(file);
   }
@@ -26,12 +27,7 @@ export function Home() {
 
       <section className="catalog">
         {catalog.map((entry) => (
-          <Link key={entry.id} className="ticket" to={`/p/${entry.id}`}>
-            <span className="ticket-stamp">Ready</span>
-            <h2>{entry.title}</h2>
-            <p>{entry.summary}</p>
-            <span className="ticket-go">Open on the bench →</span>
-          </Link>
+          <CatalogCard key={entry.id} entry={entry} />
         ))}
       </section>
 

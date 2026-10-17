@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { computeBom } from "../plan/bom";
+import { computeShop } from "../plan/stock";
 import { bakeStepImages } from "../scene/bake";
 import { usePlan, type PlanSource } from "./usePlan";
 
@@ -24,6 +25,7 @@ export function PrintView({ local = false }: { local?: boolean }) {
 
   if (status === "loading" || !plan) return <div className="page">Preparing print…</div>;
 
+  const shop = computeShop(plan);
   const bom = computeBom(plan);
   const finished = images[images.length - 1];
   const size = plan.finished_size;
@@ -48,7 +50,32 @@ export function PrintView({ local = false }: { local?: boolean }) {
       </article>
 
       <article className="page-sheet">
-        <h2>Materials</h2>
+        <h2>Buy</h2>
+        <p>Ask the store to cut the vineer rectangle. Ümarliist is sold as a whole 2.4 m stick.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Qty</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+          <tbody>
+            {shop.map((line) => (
+              <tr key={line.id}>
+                <td>{line.qty}</td>
+                <td>
+                  {line.label}
+                  <br />
+                  <small>{line.detail}</small>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </article>
+
+      <article className="page-sheet">
+        <h2>Cut</h2>
         <table>
           <thead>
             <tr>

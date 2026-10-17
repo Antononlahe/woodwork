@@ -1,0 +1,127 @@
+format: woodwork/v0
+id: tabletop-rocket
+title: Tabletop rocket
+summary: A little wooden rocket on a stick. Fins, a window, a nose.
+difficulty: easy
+time_minutes: 45
+finished_size: { x: 120, y: 120, z: 150 }
+
+parts:
+  - id: pad
+    kind: box
+    size: { x: 70, y: 70, z: 12 }
+    holes:
+      - id: stick
+        diameter: 8
+        depth: 8
+        at: { x: 35, y: 35, z: 12 }
+        dir: -z
+
+  - id: stick
+    kind: dowel
+    diameter: 8
+    length: 40
+
+  - id: body
+    kind: box
+    size: { x: 30, y: 30, z: 70 }
+    holes:
+      - id: stick
+        diameter: 8
+        depth: 12
+        at: { x: 15, y: 15, z: 0 }
+        dir: +z
+
+  - id: nose
+    kind: disk
+    diameter: 30
+    thickness: 12
+
+  - id: window
+    kind: ring
+    outer: 20
+    inner: 10
+    thickness: 4
+
+  - id: fin-e
+    kind: box
+    size: { x: 28, y: 4, z: 22 }
+  - id: fin-w
+    kind: box
+    size: { x: 28, y: 4, z: 22 }
+  - id: fin-n
+    kind: box
+    size: { x: 4, y: 28, z: 22 }
+  - id: fin-s
+    kind: box
+    size: { x: 4, y: 28, z: 22 }
+
+assembly:
+  - part: pad
+    at: { x: 0, y: 0, z: 0 }
+  - part: stick
+    at: { x: 35, y: 35, z: 4 }
+  - part: body
+    at: { x: 20, y: 20, z: 32 }
+  - part: nose
+    at: { x: 35, y: 35, z: 108 }
+  - part: window
+    at: { x: 35, y: 18, z: 82 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: fin-e
+    at: { x: 50, y: 33, z: 32 }
+  - part: fin-w
+    at: { x: -8, y: 33, z: 32 }
+  - part: fin-n
+    at: { x: 33, y: 50, z: 32 }
+  - part: fin-s
+    at: { x: 33, y: -8, z: 32 }
+
+steps:
+  - id: cut-pad
+    title: Cut the launch pad
+    body: Cut a 70mm square from 12mm vineer. Drill an 8mm hole, 8mm deep, in the center.
+    show: [pad]
+    highlight: [pad.stick]
+
+  - id: plant-stick
+    title: Plant the stick
+    body: Glue the 8mm stick into the pad. Keep it straight. This is the launch pole.
+    show: [pad, stick]
+    join:
+      - from: stick
+        into: pad.stick
+
+  - id: cut-body
+    title: Cut the body
+    body: Cut a 30 by 30 by 70mm block. Drill an 8mm pocket in the bottom for the stick.
+    show: [body]
+    highlight: [body.stick]
+
+  - id: seat-body
+    title: Seat the body
+    body: Press the rocket body onto the stick. The pocket should hide the top of the pole.
+    show: [pad, stick, body]
+    join:
+      - from: stick
+        into: body.stick
+
+  - id: cut-fins
+    title: Cut four fins
+    body: Cut four rectangles from 4mm vineer, 28 by 22mm. Glue one on each side of the body, low down, like a plus. No holes.
+    show: [body, fin-e, fin-w, fin-n, fin-s]
+
+  - id: window
+    title: Add the window
+    body: Cut a small ring from 4mm vineer, 20mm across. Saw the 10mm hole. Glue it on the front of the body. That is the porthole.
+    show: [body, window]
+
+  - id: nose
+    title: Cap the nose
+    body: Cut a 30mm disk from 12mm vineer. Glue it on top of the body.
+    show: [body, nose]
+
+  - id: launch
+    title: Ready for launch
+    body: You should have a pad, a stick, a body with four fins, a window ring, and a nose. It should stand without wobbling. Compare it to the finished picture in the corner. Count down from ten.
+    show: [pad, stick, body, nose, window, fin-e, fin-w, fin-n, fin-s]

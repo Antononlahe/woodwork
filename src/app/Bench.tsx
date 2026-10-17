@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { computeBom } from "../plan/bom";
 import { hasBlockingErrors } from "../plan/types";
+import { PartThumb } from "../scene/PartThumb";
 import { PlanScene, type ViewMode } from "../scene/PlanScene";
 import { usePlan, type PlanSource } from "./usePlan";
 
@@ -12,12 +13,16 @@ export function Bench({ local = false }: { local?: boolean }) {
   const [view, setView] = useState<ViewMode>("orbit");
   const [step, setStep] = useState(0);
   const [showBom, setShowBom] = useState(false);
+  const [showFinished, setShowFinished] = useState(true);
+  const [zoomFinished, setZoomFinished] = useState(false);
 
-  const last = plan ? plan.steps.length : 0;
+  const last = plan ? Math.max(plan.steps.length - 1, 0) : 0;
+  const finishedIndex = plan ? plan.steps.length : 0;
   const stepIndex = Math.min(step, last);
   const current = plan && stepIndex < plan.steps.length ? plan.steps[stepIndex] : undefined;
   const bom = useMemo(() => (plan ? computeBom(plan) : []), [plan]);
   const printTo = local ? "/local/print" : `/p/${id}/print`;
+  const backTo = local ? "/local/prep" : `/p/${id}/prep`;
 
   if (status === "loading") return <div className="page">Loading plan…</div>;
   if (status === "missing" || !plan) {
@@ -34,12 +39,12 @@ export function Bench({ local = false }: { local?: boolean }) {
   return (
     <div className="bench">
       <header className="bench-bar">
-        <Link className="text-link" to="/">
-          ← Plans
+        <Link className="text-link" to={backTo}>
+          ← Need
         </Link>
         <h1>{plan.title}</h1>
         <div className="bench-actions">
-          <button type="button" className="btn btn-small" onClick={() => setShowBom((v) => !v)}>
+          <button type="button" className={`btn btn-small ${showBom ? "btn-on" : ""}`} onClick={() => setShowBom((v) => !v)}>
             Materials
           </button>
           <button
@@ -66,16 +71,70 @@ export function Bench({ local = false }: { local?: boolean }) {
       )}
 
       <div className="bench-stage">
-        {blocked ? <div className="stage-empty">Fix the plan errors to see the 3D view.</div> : <PlanScene plan={plan} view={view} stepIndex={stepIndex} />}
+        {blocked ? (
+          <div className="stage-empty">Fix the plan errors to see the 3D view.</div>
+        ) : (
+          <PlanScene plan={plan} view={view} stepIndex={stepIndex} />
+        )}
+        {!blocked && (
+          <aside className={`finished-dock ${showFinished ? "finished-dock-open" : ""}`}>
+            <button type="button" className="finished-toggle" onClick={() => setShowFinished((v) => !v)}>
+              {showFinished ? "Hide finished" : "Show finished"}
+            </button>
+            {showFinished && (
+              <button
+                type="button"
+                className="finished-inset"
+                title="Zoom the finished model"
+                onClick={() => setZoomFinished(true)}
+              >
+                <PlanScene
+                  plan={plan}
+                  view="iso"
+                  stepIndex={finishedIndex}
+                  showGrid={false}
+                  interactive={false}
+                  showDimensions={false}
+                />
+              </button>
+            )}
+          </aside>
+        )}
+        {zoomFinished && !blocked && (
+          <div className="finished-zoom">
+            <div className="finished-zoom-bar">
+              <p>Finished {plan.title}</p>
+              <button type="button" className="btn btn-small" onClick={() => setZoomFinished(false)}>
+                Close
+              </button>
+            </div>
+            <div className="finished-zoom-stage">
+              <PlanScene
+                plan={plan}
+                view="iso"
+                stepIndex={finishedIndex}
+                showGrid={false}
+                interactive
+                showDimensions={false}
+              />
+            </div>
+          </div>
+        )}
         {showBom && (
           <aside className="bom-panel">
             <h2>Materials</h2>
             <ul>
-              {bom.map((line) => (
-                <li key={line.key}>
-                  <span className="qty">{line.qty}×</span> {line.label}
-                </li>
-              ))}
+              {bom.map((line) => {
+                const sample = plan.parts.find((p) => p.id === line.sampleId);
+                return (
+                  <li key={line.key}>
+                    <div className="bom-thumb">{sample ? <PartThumb part={sample} /> : null}</div>
+                    <div>
+                      <span className="qty">{line.qty}×</span> {line.label}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </aside>
         )}
@@ -89,8 +148,9 @@ export function Bench({ local = false }: { local?: boolean }) {
           </strong>
         </div>
         <div className="step-copy">
-          <h2>{current ? current.title : "Finished"}</h2>
-          <p>{current ? current.body : "This is the assembled windmill. Compare it to your bench."}</p>
+          <h2>{current ? current.title : plan.title}</h2>
+          <p>{current ? current.body : plan.summary}</p>
+          {stepIndex < last ? <p className="step-key">Orange is this piece. Blue wire is the next fit.</p> : null}
         </div>
         <div className="step-nav">
           <button type="button" className="btn" disabled={stepIndex === 0} onClick={() => setStep((s) => s - 1)}>

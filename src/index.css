@@ -38,9 +38,13 @@ a {
 }
 
 .page {
-  max-width: 52rem;
+  max-width: 56rem;
   margin: 0 auto;
   padding: 2rem 1.25rem 4rem;
+}
+
+.page.home {
+  max-width: 68rem;
 }
 
 .mast h1 {
@@ -63,35 +67,158 @@ a {
   max-width: 36rem;
 }
 
+.meta {
+  color: var(--walnut);
+}
+
+.prep-preview {
+  height: 16rem;
+  margin: 1.2rem 0 1.6rem;
+  border: 2px solid var(--walnut);
+  background: #e8d7b8;
+}
+
+.prep section {
+  margin: 1.6rem 0;
+}
+
+.prep .hint {
+  color: var(--walnut);
+  font-size: 0.9rem;
+}
+
+.prep-list {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+}
+
+.prep-list li {
+  border-bottom: 1px dashed var(--rule);
+  padding: 0.55rem 0;
+}
+
+.prep-cards li {
+  display: grid;
+  grid-template-columns: 5.2rem 1fr;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.prep-thumb {
+  width: 5.2rem;
+  height: 5.2rem;
+  border: 1px solid var(--rule);
+  background: #efe0c2;
+  overflow: hidden;
+}
+
+.prep-pic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.prep-list strong {
+  display: block;
+}
+
+.prep-list span {
+  display: block;
+  font-size: 0.86rem;
+  color: var(--walnut);
+  margin-top: 0.2rem;
+}
+
+.prep-actions {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin: -2rem -1.25rem 1.2rem;
+  padding: 0.55rem 1.25rem;
+  background: var(--paper);
+  border-bottom: 2px solid var(--walnut);
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 0.4rem 0 1.6rem;
+}
+
+.page-sheet small {
+  color: #6b4a32;
+}
+
 .catalog {
   display: grid;
-  gap: 1rem;
-  margin: 2rem 0;
+  grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr));
+  gap: 0.85rem;
+  margin: 1.4rem 0 1.8rem;
 }
 
 .ticket {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   text-decoration: none;
   color: inherit;
   background: #fff8ea;
   border: 2px solid var(--walnut);
-  padding: 1.25rem 1.4rem 1.1rem;
-  box-shadow: 6px 6px 0 var(--walnut);
+  box-shadow: 4px 4px 0 var(--walnut);
+  position: relative;
+  overflow: hidden;
+}
+
+.ticket-preview {
+  height: 8.4rem;
+  background: #e8d7b8;
+  border-bottom: 2px solid var(--walnut);
+  pointer-events: none;
+}
+
+.ticket-preview-wait {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--walnut);
+}
+
+.ticket-body {
+  padding: 0.65rem 0.8rem 0.75rem;
   position: relative;
 }
 
 .ticket h2 {
-  margin: 0.4rem 0 0.4rem;
+  margin: 0.2rem 0 0.3rem;
+  font-size: 1.15rem;
+}
+
+.ticket-body p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .ticket-stamp {
   position: absolute;
-  right: 1rem;
-  top: 1rem;
+  right: 0.55rem;
+  top: 0.55rem;
   border: 2px solid var(--stamp);
   color: var(--stamp);
-  padding: 0.15rem 0.45rem;
-  font-size: 0.7rem;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.58rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   transform: rotate(8deg);
@@ -99,8 +226,9 @@ a {
 
 .ticket-go {
   display: inline-block;
-  margin-top: 0.6rem;
+  margin-top: 0.45rem;
   color: var(--walnut);
+  font-size: 0.82rem;
 }
 
 .open-file {
@@ -130,6 +258,26 @@ a {
   background: #fff8ea;
 }
 
+.btn-on {
+  background: var(--brass);
+}
+
+.dim-label {
+  display: inline-block;
+  background: #fff8ea;
+  color: #3a1f10;
+  border: 1px solid #4a2c1a;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1;
+  padding: 2px 5px;
+  white-space: nowrap;
+}
+
+.dim-label-muted {
+  opacity: 0.72;
+}
+
 .text-link {
   color: var(--walnut);
   text-decoration: none;
@@ -147,8 +295,9 @@ a {
 
 .bench-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.5rem 0.8rem;
   padding: 0.45rem 0.7rem;
   background: var(--paper);
   border-bottom: 2px solid var(--walnut);
@@ -197,12 +346,13 @@ a {
   position: absolute;
   top: 0.6rem;
   right: 0.6rem;
-  width: min(18rem, 90vw);
+  width: min(20rem, 92vw);
   background: #fff8ea;
   border: 2px solid var(--walnut);
   padding: 0.8rem 1rem;
-  max-height: 70%;
+  max-height: 72%;
   overflow: auto;
+  z-index: 2;
 }
 
 .bom-panel h2 {
@@ -210,8 +360,103 @@ a {
   font-size: 1.1rem;
 }
 
+.bom-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.bom-panel li {
+  display: grid;
+  grid-template-columns: 4.4rem 1fr;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.bom-thumb {
+  width: 4.4rem;
+  height: 4.4rem;
+  border: 1px solid var(--rule);
+}
+
 .bom-panel .qty {
   color: var(--stamp);
+}
+
+.finished-dock {
+  position: absolute;
+  left: 0.7rem;
+  bottom: 0.7rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.finished-toggle {
+  appearance: none;
+  border: 2px solid var(--walnut);
+  background: var(--brass);
+  color: var(--walnut);
+  font: inherit;
+  font-size: 0.85rem;
+  min-height: 44px;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+}
+
+.finished-inset {
+  appearance: none;
+  display: block;
+  padding: 0;
+  width: min(16rem, 46vw);
+  height: min(13rem, 36vh);
+  border: 2px solid var(--walnut);
+  background: #e8d7b8;
+  box-shadow: 4px 4px 0 rgba(42, 24, 16, 0.25);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.finished-inset canvas {
+  pointer-events: none;
+}
+
+.finished-zoom {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  background: #e8d7b8;
+}
+
+.finished-zoom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.4rem 0.7rem;
+  background: var(--paper);
+  border-bottom: 2px solid var(--walnut);
+}
+
+.finished-zoom-bar p {
+  margin: 0;
+  font-family: "Fraunces", "Iowan Old Style", serif;
+  color: var(--walnut);
+}
+
+.finished-zoom-stage {
+  flex: 1;
+  min-height: 0;
+}
+
+.finished-zoom-stage > div {
+  height: 100%;
 }
 
 .step-ticket {
@@ -229,6 +474,12 @@ a {
   color: var(--stamp);
   padding: 0.25rem 0.55rem;
   text-align: center;
+}
+
+.step-key {
+  margin: 0.3rem 0 0;
+  font-size: 0.75rem;
+  color: #6b4a32;
 }
 
 .step-num span {

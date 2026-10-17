@@ -3,8 +3,9 @@ id: tabletop-windmill
 title: Tabletop windmill
 summary: A small windmill that actually spins.
 difficulty: easy
-time_minutes: 60
-finished_size: { x: 160, y: 160, z: 180 }
+time_minutes: 50
+finished_size: { x: 160, y: 90, z: 210 }
+iso_from: { x: 1, y: 1, z: 0.82 }
 
 parts:
   - id: base
@@ -24,155 +25,83 @@ parts:
 
   - id: head
     kind: box
-    size: { x: 30, y: 22, z: 22 }
+    size: { x: 32, y: 24, z: 28 }
     holes:
       - id: mast-pocket
         diameter: 8
         depth: 10
-        at: { x: 15, y: 11, z: 0 }
+        at: { x: 16, y: 12, z: 0 }
         dir: +z
       - id: shaft
-        diameter: 5.2
+        diameter: 8
         through: true
-        at: { x: 15, y: 0, z: 11 }
+        at: { x: 16, y: 0, z: 18 }
         dir: +y
 
   - id: shaft
     kind: dowel
-    diameter: 5
-    length: 50
-
-  - id: washer
-    kind: ring
-    outer: 16
-    inner: 5.5
-    thickness: 3
+    diameter: 8
+    length: 56
 
   - id: hub
     kind: disk
-    diameter: 28
-    thickness: 10
+    diameter: 32
+    thickness: 12
     holes:
       - id: bore
-        diameter: 5.2
+        diameter: 8
         through: true
         at: { x: 0, y: 0, z: 0 }
         dir: +z
-      - id: vane-0
-        diameter: 3
-        depth: 8
-        at: { x: 14, y: 0, z: 0 }
-        dir: -x
-      - id: vane-1
-        diameter: 3
-        depth: 8
-        at: { x: 0, y: 14, z: 0 }
-        dir: -y
-      - id: vane-2
-        diameter: 3
-        depth: 8
-        at: { x: -14, y: 0, z: 0 }
-        dir: +x
-      - id: vane-3
-        diameter: 3
-        depth: 8
-        at: { x: 0, y: -14, z: 0 }
-        dir: +y
+
+  - id: nose
+    kind: disk
+    diameter: 18
+    thickness: 12
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
 
   - id: vane-a
     kind: box
-    size: { x: 55, y: 20, z: 3 }
-    holes:
-      - id: peg
-        diameter: 3
-        through: true
-        at: { x: 6, y: 10, z: 0 }
-        dir: +z
+    size: { x: 55, y: 4, z: 16 }
   - id: vane-b
     kind: box
-    size: { x: 55, y: 20, z: 3 }
-    holes:
-      - id: peg
-        diameter: 3
-        through: true
-        at: { x: 6, y: 10, z: 0 }
-        dir: +z
+    size: { x: 16, y: 4, z: 55 }
   - id: vane-c
     kind: box
-    size: { x: 55, y: 20, z: 3 }
-    holes:
-      - id: peg
-        diameter: 3
-        through: true
-        at: { x: 6, y: 10, z: 0 }
-        dir: +z
+    size: { x: 55, y: 4, z: 16 }
   - id: vane-d
     kind: box
-    size: { x: 55, y: 20, z: 3 }
-    holes:
-      - id: peg
-        diameter: 3
-        through: true
-        at: { x: 6, y: 10, z: 0 }
-        dir: +z
-
-  - id: peg-a
-    kind: dowel
-    diameter: 3
-    length: 16
-  - id: peg-b
-    kind: dowel
-    diameter: 3
-    length: 16
-  - id: peg-c
-    kind: dowel
-    diameter: 3
-    length: 16
-  - id: peg-d
-    kind: dowel
-    diameter: 3
-    length: 16
+    size: { x: 16, y: 4, z: 55 }
 
 assembly:
   - part: base
     at: { x: 0, y: 0, z: 0 }
   - part: mast
-    at: { x: 40, y: 40, z: 12 }
+    at: { x: 40, y: 40, z: 4 }
   - part: head
-    at: { x: 25, y: 29, z: 152 }
+    at: { x: 24, y: 28, z: 134 }
   - part: shaft
-    at: { x: 40, y: 14, z: 163 }
-    rot: { x: -90, y: 0, z: 0 }
-  - part: washer
-    at: { x: 40, y: 52.5, z: 163 }
+    at: { x: 40, y: 2, z: 152 }
     rot: { x: -90, y: 0, z: 0 }
   - part: hub
-    at: { x: 40, y: 59, z: 163 }
+    at: { x: 40, y: 16, z: 152 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: nose
+    at: { x: 40, y: 4, z: 152 }
     rot: { x: -90, y: 0, z: 0 }
   - part: vane-a
-    at: { x: 48, y: 57.5, z: 153 }
-    rot: { x: -90, y: 0, z: 0 }
+    at: { x: 32, y: 6, z: 144 }
   - part: vane-b
-    at: { x: 30, y: 57.5, z: 157 }
-    rot: { x: -90, y: 0, z: 90 }
+    at: { x: 32, y: 6, z: 144 }
   - part: vane-c
-    at: { x: 32, y: 57.5, z: 173 }
-    rot: { x: -90, y: 0, z: 180 }
+    at: { x: -7, y: 6, z: 144 }
   - part: vane-d
-    at: { x: 50, y: 57.5, z: 169 }
-    rot: { x: -90, y: 0, z: -90 }
-  - part: peg-a
-    at: { x: 54, y: 59, z: 163 }
-    rot: { x: 0, y: -90, z: 0 }
-  - part: peg-b
-    at: { x: 40, y: 59, z: 149 }
-    rot: { x: 90, y: 0, z: 0 }
-  - part: peg-c
-    at: { x: 26, y: 59, z: 163 }
-    rot: { x: 0, y: 90, z: 0 }
-  - part: peg-d
-    at: { x: 40, y: 59, z: 177 }
-    rot: { x: -90, y: 0, z: 0 }
+    at: { x: 32, y: 6, z: 97 }
 
 steps:
   - id: drill-base
@@ -191,7 +120,7 @@ steps:
 
   - id: drill-head
     title: Drill the head
-    body: Drill an 8mm pocket 10mm deep in the bottom of the head. Then drill a 5.2mm hole all the way through the sides for the shaft.
+    body: Cut a 32 by 24 by 28mm block. Drill an 8mm pocket 10mm deep in the bottom. Then drill an 8mm hole through the sides, near the top, for the shaft.
     show: [head]
     highlight: [head.mast-pocket, head.shaft]
 
@@ -203,51 +132,30 @@ steps:
       - from: mast
         into: head.mast-pocket
 
-  - id: cut-vanes
-    title: Cut the vanes
-    body: Cut four thin blades, 55 by 20mm. Drill a 3mm hole near one end of each.
-    show: [vane-a]
-    highlight: [vane-a.peg]
+  - id: cut-sails
+    title: Cut the sails
+    body: Cut a 32mm hub and an 18mm nose from 12mm vineer. Drill an 8mm hole through the center of each. Cut four sails from 4mm vineer, 55 by 16mm.
+    show: [hub, nose, vane-a]
+    highlight: [hub.bore, nose.bore]
 
-  - id: drill-hub
-    title: Drill the hub
-    body: Drill a 5.2mm hole through the hub center so it can spin on the shaft. Drill four 3mm holes around the rim for the vanes.
-    show: [hub]
-    highlight: [hub.bore]
-
-  - id: peg-vanes
-    title: Peg the vanes
-    body: Glue a 3mm peg through each vane and into the hub. Keep the blades even, like a plus sign.
-    show: [hub, vane-a, vane-b, vane-c, vane-d, peg-a, peg-b, peg-c, peg-d]
-    join:
-      - from: peg-a
-        into: hub.vane-0
-      - from: peg-a
-        into: vane-a.peg
-      - from: peg-b
-        into: hub.vane-1
-      - from: peg-b
-        into: vane-b.peg
-      - from: peg-c
-        into: hub.vane-2
-      - from: peg-c
-        into: vane-c.peg
-      - from: peg-d
-        into: hub.vane-3
-      - from: peg-d
-        into: vane-d.peg
+  - id: glue-sails
+    title: Glue the sails
+    body: Glue the four sails on the front of the hub in a plus. They sit on the face that points away from the house, so they can turn.
+    show: [hub, vane-a, vane-b, vane-c, vane-d]
 
   - id: fit-shaft
     title: Fit the shaft
-    body: Slide the 5mm shaft through the head, then the washer, then the hub. The vanes should clear the mast.
-    show: [head, shaft, washer, hub, vane-a, vane-b, vane-c, vane-d]
+    body: Slide the 8mm shaft through the nose, the hub, then the head. Glue the hub and the nose to the shaft. Sand the head hole until the sails turn. The sails stay in front of the mast.
+    show: [base, mast, head, shaft, hub, nose, vane-a, vane-b, vane-c, vane-d]
     join:
       - from: shaft
         into: head.shaft
       - from: shaft
         into: hub.bore
+      - from: shaft
+        into: nose.bore
 
   - id: spin-check
     title: Check the spin
-    body: Blow on the vanes. The hub should turn freely. Sand the shaft hole a little if it binds.
-    show: [base, mast, head, shaft, washer, hub, vane-a, vane-b, vane-c, vane-d, peg-a, peg-b, peg-c, peg-d]
+    body: You should have a tower on the base, a little head on top, and four sails in front. Blow on the sails — they should turn without hitting the mast or the base. If the hole binds, sand it. Compare it to the finished picture in the corner.
+    show: [base, mast, head, shaft, hub, nose, vane-a, vane-b, vane-c, vane-d]

@@ -1,5 +1,15 @@
-import { assembledAabb, extentAlong, localAabb } from "./aabb";
-import type { AxisDir, Diagnostic, Hole, Part, Plan } from "./types";
+import {
+  aabbOverlaps,
+  assembledAabb,
+  expandAabb,
+  extentAlong,
+  localAabb,
+  rotateAabbAround,
+  rotateXyz,
+  worldAabb,
+  type Aabb,
+} from "./aabb";
+import type { AssemblyItem, AxisDir, Diagnostic, Hole, Part, Plan, Vec3 } from "./types";
 
 const JOIN_TOL = 0.3;
 const EPS = 1e-6;
@@ -144,5 +154,89 @@ export function validatePlan(plan: Plan): Diagnostic[] {
     );
   }
 
+  out.push(...spinHits(plan));
+
+  return out;
+}
+
+function itemFor(plan: Plan, id: string): AssemblyItem | undefined {
+  return plan.assembly.find((item) => item.part === id);
+}
+
+function joinedHosts(plan: Plan, dowelId: string): string[] {
+  const hosts: string[] = [];
+  for (const step of plan.steps) {
+    for (const join of step.join ?? []) {
+      if (join.from !== dowelId) continue;
+      const { partId } = splitRef(join.into);
+      if (!hosts.includes(partId)) hosts.push(partId);
+    }
+  }
+  return hosts;
+}
+
+function spinHits(plan: Plan): Diagnostic[] {
+  const byId = new Map(plan.parts.map((p) => [p.id, p]));
+  const boxes = new Map<string, Aabb>();
+  for (const item of plan.assembly) {
+    const part = byId.get(item.part);
+    if (part) boxes.set(item.part, worldAabb(part, item));
+  }
+  const out: Diagnostic[] = [];
+  const seen = new Set<string>();
+
+  for (const part of plan.parts) {
+    if (part.kind !== "dowel") continue;
+    const hosts = joinedHosts(plan, part.id);
+    if (hosts.length < 2) continue;
+    const item = itemFor(plan, part.id);
+    if (!item) continue;
+
+    const rotors = new Set<string>();
+    for (const id of hosts) {
+      const host = byId.get(id);
+      if (!host) continue;
+      if (host.kind === "ring") rotors.add(id);
+      if (host.kind === "disk" && host.thickness <= host.diameter) rotors.add(id);
+    }
+    for (const [id, box] of boxes) {
+      if (rotors.has(id) || hosts.includes(id) || id === part.id) continue;
+      const other = byId.get(id);
+      if (!other || other.kind === "dowel") continue;
+      for (const rid of rotors) {
+        const rb = boxes.get(rid);
+        if (rb && aabbOverlaps(box, expandAabb(rb, 2.5))) rotors.add(id);
+      }
+    }
+    if (rotors.size === 0) continue;
+
+    const origin = item.at;
+    const axis: Vec3 = rotateXyz({ x: 0, y: 0, z: 1 }, item.rot ?? { x: 0, y: 0, z: 0 });
+    const fixed = [...boxes.keys()].filter((id) => id !== part.id && !rotors.has(id));
+
+    for (const angle of [45, 90, 135, 180, 225, 270, 315]) {
+      const rad = (angle * Math.PI) / 180;
+      for (const rid of rotors) {
+        const rb = boxes.get(rid);
+        if (!rb) continue;
+        const swung = rotateAabbAround(rb, origin, axis, rad);
+        for (const fid of fixed) {
+          const fb = boxes.get(fid);
+          if (!fb || !aabbOverlaps(swung, fb)) continue;
+          const key = `${part.id}:${rid}:${fid}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          out.push(
+            diag(
+              "error",
+              "spin-hit",
+              `assembly.${part.id}`,
+              `${rid} hits ${fid} when turning on ${part.id}`,
+            ),
+          );
+        }
+      }
+    }
+  }
   return out;
 }
