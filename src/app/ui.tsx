@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import type { Plan } from "../plan/types";
+import { Link } from "react-router-dom";
+import type { Diagnostic, Plan } from "../plan/types";
 
 const PATHS = {
   back: "M15 5l-7 7 7 7",
@@ -49,6 +50,27 @@ export function Notice({ children }: { children: React.ReactNode }) {
   return (
     <div className="page notice">
       <p>{children}</p>
+    </div>
+  );
+}
+
+/** Shown when there is no usable plan. Says why when the file was read but broken. */
+export function NoPlan({ diagnostics = [] }: { diagnostics?: Diagnostic[] }) {
+  return (
+    <div className="page notice">
+      <p>{diagnostics.length > 0 ? "This plan file has problems:" : "No plan loaded."}</p>
+      {diagnostics.length > 0 && (
+        <ul className="problems">
+          {diagnostics.slice(0, 8).map((d) => (
+            <li key={`${d.path}-${d.code}`}>
+              <code>{d.path}</code> {d.message}
+            </li>
+          ))}
+        </ul>
+      )}
+      <Link className="btn" to="/">
+        Back to projects
+      </Link>
     </div>
   );
 }

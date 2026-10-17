@@ -80,6 +80,8 @@ export function validatePlan(plan: Plan): Diagnostic[] {
     for (const [j, id] of step.show.entries()) {
       if (!findPart(plan, id)) {
         out.push(diag("error", "unknown-ref", `steps.${si}.show.${j}`, `unknown part ${id}`));
+      } else if (step.show.indexOf(id) !== j) {
+        out.push(diag("warning", "duplicate-show", `steps.${si}.show.${j}`, `${id} is listed twice`));
       }
     }
     for (const [j, ref] of (step.highlight ?? []).entries()) {

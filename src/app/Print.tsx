@@ -4,35 +4,40 @@ import { computeBom } from "../plan/bom";
 import { computeShop } from "../plan/stock";
 import { needsAdult, paintColors } from "../plan/who";
 import { stepImages } from "../scene/snapshot";
-import { Notice, useTitle } from "./ui";
+import { NoPlan, Notice, useTitle } from "./ui";
+import { useSettings } from "./Settings";
 import { usePlan, type PlanSource } from "./usePlan";
 
 export function PrintView({ local = false }: { local?: boolean }) {
   const { id } = useParams();
   const source: PlanSource = local ? { type: "local" } : { type: "catalog", id: id ?? "" };
-  const { plan, status } = usePlan(source);
+  const { plan, status, diagnostics } = usePlan(source);
+  const { settings } = useSettings();
   const [images, setImages] = useState<string[]>([]);
+  const [failed, setFailed] = useState(false);
   const back = local ? "/local" : `/p/${id}`;
   useTitle(plan ? `${plan.title} (print)` : "");
 
   useEffect(() => {
     if (!plan) return;
     let cancelled = false;
-    void stepImages(plan).then((urls) => {
-      if (!cancelled) setImages(urls);
-    });
+    setImages([]);
+    setFailed(false);
+    void stepImages(plan, settings.paint)
+      .then((urls) => {
+        if (!cancelled) setImages(urls);
+      })
+      .catch(() => {
+        if (!cancelled) setFailed(true);
+      });
     return () => {
       cancelled = true;
     };
-  }, [plan]);
+  }, [plan, settings.paint]);
 
   if (status === "loading") return <Notice>Preparing print…</Notice>;
   if (status === "missing" || !plan) {
-    return (
-      <Notice>
-        No plan loaded. <Link to="/">Back to projects</Link>
-      </Notice>
-    );
+    return <NoPlan diagnostics={diagnostics} />;
   }
 
   const shop = computeShop(plan);
@@ -63,7 +68,7 @@ export function PrintView({ local = false }: { local?: boolean }) {
           </span>
           <span>{plan.difficulty}</span>
         </p>
-        {finished ? <img src={finished} alt="Finished model" /> : <p>Drawing the finished model…</p>}
+        {finished ? <img src={finished} alt="Finished model" /> : <p>{failed ? "Could not draw the pictures here. The text pages still print." : "Drawing the finished model…"}</p>}
       </article>
 
       <article className="page-sheet">
@@ -128,7 +133,7 @@ export function PrintView({ local = false }: { local?: boolean }) {
           </p>
           <h2>{step.title}</h2>
           <p>{step.body}</p>
-          {images[i] ? <img src={images[i]} alt={step.title} /> : <p>Drawing this step…</p>}
+          {images[i] ? <img src={images[i]} alt={step.title} /> : <p>{failed ? "" : "Drawing this step…"}</p>}
         </article>
       ))}
     </div>

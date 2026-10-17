@@ -12,6 +12,9 @@
     "plan:check": "tsx src/plan/cli.ts public/plans src/test/fixtures/ok-minimal.ww.yaml"
   },
   "dependencies": {
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/nunito": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "@react-three/drei": "^10.7.8",
     "@react-three/fiber": "^9.7.0",
     "@types/three": "^0.185.4",

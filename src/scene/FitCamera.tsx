@@ -19,6 +19,8 @@ export function FitCamera({
   const controls = useThree((s) => s.controls);
   const size = useThree((s) => s.size);
   const invalidate = useThree((s) => s.invalidate);
+  // Fixed view refits on resize. Turning view refits once the canvas has a real size.
+  const fitKey = view === "iso" ? `${size.width}x${size.height}` : size.width > 0 ? "sized" : "wait";
   useLayoutEffect(() => {
     const box =
       framedBox(plan, framedIds(plan, stepIndex)) ??
@@ -57,7 +59,9 @@ export function FitCamera({
       orbit.update();
     }
     invalidate();
-  }, [plan, stepIndex, view, camera, controls, invalidate, size.width, size.height]);
+    // The turning view keeps the user's angle and zoom through a resize (splitter, URL bar).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan, stepIndex, view, camera, controls, invalidate, fitKey]);
 
   return null;
 }

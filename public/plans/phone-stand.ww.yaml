@@ -183,7 +183,7 @@ steps:
 
   - id: paint
     title: Paint it (optional)
-    body: "Sand every edge soft. Paint the base blue, the back yellow and the lip red. Leave the pegs and the hook bare wood. Let each colour dry before the next, and keep paint out of the phone slot."
+    body: "Sand every edge soft. Paint the base blue, the back yellow and the lip red. Paint the cable ring cream. Leave the pegs and the hook bare wood. Let each colour dry before the next, and keep paint out of the phone slot."
     show: [base, back, lip, back-peg-a, back-peg-b, lip-peg-a, lip-peg-b, hook, tidy]
     paint: true
     adult: false

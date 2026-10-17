@@ -169,3 +169,9 @@ steps:
   expect(plan).toBeUndefined();
   expect(diagnostics.some((d) => d.code === "schema")).toBe(true);
 });
+
+test("a part listed twice in one step is a warning", () => {
+  const plan = mustParse(readFileSync("src/test/fixtures/ok-minimal.ww.yaml", "utf8"));
+  plan.steps[0].show = [plan.steps[0].show[0], plan.steps[0].show[0]];
+  expect(validatePlan(plan).some((d) => d.code === "duplicate-show" && d.level === "warning")).toBe(true);
+});

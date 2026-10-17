@@ -55,7 +55,7 @@ Schema, unknown refs, hole inside part, dowel Ø vs hole Ø within 0.3 mm, assem
 
 ## Rules
 
-- **One WebGL context for the live view.** Cards, thumbnails, print and part pictures come from `snapshot.ts` (one offscreen renderer, queued). Never mount a `<Canvas>` per list row.
+- **One live `<Canvas>` (two while the finished-model zoom is open).** Cards, thumbnails, print and part pictures come from `snapshot.ts` (one offscreen renderer, queued). Never mount a `<Canvas>` per list row. A failed picture must not be cached.
 - Build geometry with `buildPartCached` (CSG is slow).
 - Colours and spacing come from CSS tokens in `src/index.css` (Day, Night, Auto). No hard-coded colours in components.
 - Touch targets at least 44 px. Layout must hold from 360 px phones to desktop, portrait and landscape.

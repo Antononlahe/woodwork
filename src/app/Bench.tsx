@@ -9,7 +9,7 @@ import { finishedImage } from "../scene/snapshot";
 import { firstSeenIds } from "../scene/stepView";
 import { useImage } from "../scene/useImage";
 import { SettingsButton, useSettings } from "./Settings";
-import { Icon, LevelPill, Notice, useTitle } from "./ui";
+import { Icon, LevelPill, NoPlan, Notice, useTitle } from "./ui";
 import { usePlan, type PlanSource } from "./usePlan";
 
 const STEP_KEY = "woodwork.step.";
@@ -81,6 +81,8 @@ function Splitter({
     const shrink = wide ? "ArrowRight" : "ArrowDown";
     if (e.key === grow) onSize(clamp(size + 24));
     else if (e.key === shrink) onSize(clamp(size - 24));
+    else if (e.key === "Home") onSize(limit().min);
+    else if (e.key === "End") onSize(Math.round(limit().max));
     else return;
     e.preventDefault();
   }
@@ -194,12 +196,18 @@ export function Bench({ local = false }: { local?: boolean }) {
       if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
       if (t?.getAttribute("role") === "separator") return;
       if (document.querySelector("dialog[open]")) return;
+      if (e.key === "Escape") {
+        setZoomFinished(false);
+        setShowBom(false);
+        return;
+      }
+      if (zoomFinished || showBom) return;
       if (e.key === "ArrowRight") go(stepIndex + 1);
       else if (e.key === "ArrowLeft") go(stepIndex - 1);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [go, stepIndex]);
+  }, [go, stepIndex, zoomFinished, showBom]);
 
   const painted = settings.paint;
   const finishedPic = useImage(
@@ -210,11 +218,7 @@ export function Bench({ local = false }: { local?: boolean }) {
 
   if (status === "loading") return <Notice>Loading plan…</Notice>;
   if (status === "missing" || !plan) {
-    return (
-      <Notice>
-        No plan loaded. <Link to="/">Back to projects</Link>
-      </Notice>
-    );
+    return <NoPlan diagnostics={diagnostics} />;
   }
 
   const current = plan.steps[stepIndex];
@@ -222,6 +226,8 @@ export function Bench({ local = false }: { local?: boolean }) {
   const printTo = local ? "/local/print" : `/p/${id}/print`;
   const backTo = local ? "/local/prep" : `/p/${id}/prep`;
   const panel = wide ? (sizes.wide ?? read(PANEL_KEY + "wide") ?? panelDefault.wide()) : (sizes.tall ?? read(PANEL_KEY + "tall") ?? panelDefault.tall());
+  const room = wide ? window.innerWidth * 0.6 : window.innerHeight * 0.75;
+  const panelPx = Math.min(panel, Math.max(room, 240));
   const setPanel = (n: number) => {
     setSizes((s) => (wide ? { ...s, wide: n } : { ...s, tall: n }));
     write(PANEL_KEY + (wide ? "wide" : "tall"), n);
@@ -271,7 +277,7 @@ export function Bench({ local = false }: { local?: boolean }) {
       <main
         ref={main}
         className={`bench-main ${wide ? "is-wide" : "is-tall"}`}
-        style={{ ["--panel" as string]: `${panel}px` }}
+        style={{ ["--panel" as string]: `${panelPx}px` }}
       >
         <section className="bench-stage" aria-label="3D model" onPointerDown={() => setHint(false)}>
           {blocked ? (
@@ -315,10 +321,10 @@ export function Bench({ local = false }: { local?: boolean }) {
           )}
 
           {zoomFinished && !blocked && (
-            <div className="overlay finished-zoom">
+            <div className="overlay finished-zoom" role="dialog" aria-label={`Finished ${plan.title}`}>
               <div className="overlay-bar">
                 <p>Finished {plan.title}</p>
-                <button type="button" className="btn btn-ghost btn-icon" aria-label="Close" onClick={() => setZoomFinished(false)}>
+                <button type="button" className="btn btn-ghost btn-icon" aria-label="Close" autoFocus onClick={() => setZoomFinished(false)}>
                   <Icon name="close" />
                 </button>
               </div>
@@ -336,10 +342,10 @@ export function Bench({ local = false }: { local?: boolean }) {
           )}
 
           {showBom && (
-            <aside className="overlay bom-panel" aria-label="Pieces list">
+            <aside className="overlay bom-panel" role="dialog" aria-label="Pieces list">
               <div className="overlay-bar">
                 <h2>All the pieces</h2>
-                <button type="button" className="btn btn-ghost btn-icon" aria-label="Close" onClick={() => setShowBom(false)}>
+                <button type="button" className="btn btn-ghost btn-icon" aria-label="Close" autoFocus onClick={() => setShowBom(false)}>
                   <Icon name="close" />
                 </button>
               </div>
@@ -360,7 +366,7 @@ export function Bench({ local = false }: { local?: boolean }) {
           )}
         </section>
 
-        <Splitter wide={wide} size={panel} onSize={setPanel} box={main} />
+        <Splitter wide={wide} size={panelPx} onSize={setPanel} box={main} />
 
         <aside className="step-panel" aria-label="Build steps">
           <div className="progress" role="group" aria-label="Steps">

@@ -7,7 +7,7 @@ import { finishedImage } from "../scene/snapshot";
 import { ShopThumb, ToolThumb } from "../scene/StockThumb";
 import { useImage } from "../scene/useImage";
 import { SettingsButton, useSettings } from "./Settings";
-import { Icon, LevelPill, minutesText, Notice, useTitle } from "./ui";
+import { Icon, LevelPill, minutesText, NoPlan, Notice, useTitle } from "./ui";
 import { useCatalog, usePlan, type PlanSource } from "./usePlan";
 
 const SAFETY = [
@@ -21,7 +21,7 @@ const SAFETY = [
 export function Prep({ local = false }: { local?: boolean }) {
   const { id } = useParams();
   const source: PlanSource = local ? { type: "local" } : { type: "catalog", id: id ?? "" };
-  const { plan, status } = usePlan(source);
+  const { plan, status, diagnostics } = usePlan(source);
   const { settings } = useSettings();
   const catalog = useCatalog();
   useTitle(plan?.title ?? "");
@@ -34,11 +34,7 @@ export function Prep({ local = false }: { local?: boolean }) {
 
   if (status === "loading") return <Notice>Loading plan…</Notice>;
   if (status === "missing" || !plan) {
-    return (
-      <Notice>
-        No plan loaded. <Link to="/">Back to projects</Link>
-      </Notice>
-    );
+    return <NoPlan diagnostics={diagnostics} />;
   }
 
   const shop = computeShop(plan);

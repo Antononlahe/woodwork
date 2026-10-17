@@ -25,17 +25,19 @@ import { framedBox } from "./world";
  */
 let renderer: WebGLRenderer | undefined;
 let queue: Promise<unknown> = Promise.resolve();
-const caches = new WeakMap<object, Map<string, Promise<string>>>();
+let caches = new WeakMap<object, Map<string, Promise<string>>>();
 
 function getRenderer(): WebGLRenderer {
   if (!renderer) {
-    renderer = new WebGLRenderer({
-      canvas: document.createElement("canvas"),
-      antialias: true,
-      alpha: true,
-      preserveDrawingBuffer: true,
-    });
+    const canvas = document.createElement("canvas");
+    renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
     renderer.setClearColor(0x000000, 0);
+    // A lost context draws blank pictures without throwing: drop it and every picture made so far.
+    canvas.addEventListener("webglcontextlost", () => {
+      renderer?.dispose();
+      renderer = undefined;
+      caches = new WeakMap();
+    });
   }
   return renderer;
 }
@@ -66,13 +68,15 @@ function draw({ group, box, dir, w, h, margin = 1.1 }: Job): string {
   const cam = new OrthographicCamera(-halfW, halfW, halfH, -halfH, 0.1, radius * 8);
   cam.position.copy(center).addScaledVector(dir, radius * 3);
   cam.lookAt(center);
-  gl.setSize(w, h, false);
-  gl.render(scene, cam);
-  const url = gl.domElement.toDataURL("image/webp", 0.92);
-  group.traverse((o) => {
-    if (o instanceof Mesh) (o.material as MeshStandardMaterial).dispose();
-  });
-  return url;
+  try {
+    gl.setSize(w, h, false);
+    gl.render(scene, cam);
+    return gl.domElement.toDataURL("image/webp", 0.92);
+  } finally {
+    group.traverse((o) => {
+      if (o instanceof Mesh) (o.material as MeshStandardMaterial).dispose();
+    });
+  }
 }
 
 function cached(owner: object, key: string, make: () => string): Promise<string> {
@@ -89,6 +93,8 @@ function cached(owner: object, key: string, make: () => string): Promise<string>
       }
     }, 0)));
     queue = hit.catch(() => undefined);
+    // Don't keep a failure: the next ask tries again.
+    hit.catch(() => map.get(key) === hit && map.delete(key));
     map.set(key, hit);
   }
   return hit;
@@ -128,13 +134,13 @@ export function finishedImage(plan: Plan, painted: boolean, w = 640, h = 420): P
 }
 
 /** One picture per step, plus the finished one last. For the print sheets. */
-export async function stepImages(plan: Plan): Promise<string[]> {
+export async function stepImages(plan: Plan, paint: boolean): Promise<string[]> {
   const out: string[] = [];
   for (const [i, step] of plan.steps.entries()) {
     out.push(
-      await cached(plan, `step|${i}`, () =>
+      await cached(plan, `step|${i}|${paint}`, () =>
         draw({
-          group: planGroup(plan, visibleIds(plan, i), !!step.paint, currentIds(plan, i)),
+          group: planGroup(plan, visibleIds(plan, i), paint && !!step.paint, currentIds(plan, i)),
           box: framedBox(plan, framedIds(plan, i)) ?? undefined,
           dir: isoDir(plan),
           w: 1200,
@@ -144,7 +150,7 @@ export async function stepImages(plan: Plan): Promise<string[]> {
       ),
     );
   }
-  out.push(await finishedImage(plan, plan.parts.some((p) => p.paint), 1200, 800));
+  out.push(await finishedImage(plan, paint && plan.parts.some((p) => p.paint), 1200, 800));
   return out;
 }
 

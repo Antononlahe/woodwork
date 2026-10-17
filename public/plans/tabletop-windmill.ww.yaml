@@ -44,7 +44,7 @@ parts:
   - id: shaft
     kind: dowel
     diameter: 8
-    length: 56
+    length: 68
 
   - id: hub
     kind: disk
@@ -70,22 +70,26 @@ parts:
         at: { x: 0, y: 0, z: 0 }
         dir: +z
 
-  - id: vane-a
+  - id: arm-h
     kind: box
     paint: "#2f6bb5"
-    size: { x: 55, y: 4, z: 16 }
-  - id: vane-b
+    size: { x: 94, y: 4, z: 16 }
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 47, y: 0, z: 8 }
+        dir: +y
+  - id: arm-v
     kind: box
     paint: "#f6f1e4"
-    size: { x: 16, y: 4, z: 55 }
-  - id: vane-c
-    kind: box
-    paint: "#2f6bb5"
-    size: { x: 55, y: 4, z: 16 }
-  - id: vane-d
-    kind: box
-    paint: "#f6f1e4"
-    size: { x: 16, y: 4, z: 55 }
+    size: { x: 16, y: 4, z: 94 }
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 8, y: 0, z: 47 }
+        dir: +y
 
 assembly:
   - part: base
@@ -95,22 +99,18 @@ assembly:
   - part: head
     at: { x: 24, y: 28, z: 134 }
   - part: shaft
-    at: { x: 40, y: 2, z: 152 }
+    at: { x: 40, y: -10, z: 152 }
     rot: { x: -90, y: 0, z: 0 }
   - part: hub
     at: { x: 40, y: 16, z: 152 }
     rot: { x: -90, y: 0, z: 0 }
   - part: nose
-    at: { x: 40, y: 4, z: 152 }
+    at: { x: 40, y: -4, z: 152 }
     rot: { x: -90, y: 0, z: 0 }
-  - part: vane-a
-    at: { x: 32, y: 6, z: 144 }
-  - part: vane-b
-    at: { x: 32, y: 6, z: 144 }
-  - part: vane-c
+  - part: arm-h
     at: { x: -7, y: 6, z: 144 }
-  - part: vane-d
-    at: { x: 32, y: 6, z: 105 }
+  - part: arm-v
+    at: { x: 32, y: 2, z: 105 }
 
 steps:
   - id: drill-base
@@ -143,19 +143,19 @@ steps:
 
   - id: cut-sails
     title: Cut the sails
-    body: Cut a 32mm hub and an 18mm nose from 12mm vineer. Drill an 8mm hole through the center of each. Cut four sails from 4mm vineer, 55 by 16mm.
-    show: [hub, nose, vane-a]
-    highlight: [hub.bore, nose.bore]
+    body: Cut a 32mm hub and an 18mm nose from 12mm vineer. Drill an 8mm hole through the center of each. Cut two sail arms from 4mm vineer, 94 by 16mm. Drill an 8mm hole through the middle of each.
+    show: [hub, nose, arm-h, arm-v]
+    highlight: [hub.bore, nose.bore, arm-h.bore, arm-v.bore]
 
   - id: glue-sails
     title: Glue the sails
-    body: Glue the four sails on the front of the hub in a plus. They sit on the face that points away from the house, so they can turn.
-    show: [hub, vane-a, vane-b, vane-c, vane-d]
+    body: Glue the flat arm on the front of the hub. Glue the upright arm over it, so the two make a plus. Line up the holes. They sit on the face that points away from the house, so they can turn.
+    show: [hub, arm-h, arm-v]
 
   - id: fit-shaft
     title: Fit the shaft
-    body: Slide the 8mm shaft through the nose, the hub, then the head. Glue the hub and the nose to the shaft. Sand the head hole until the sails turn. The sails stay in front of the mast.
-    show: [base, mast, head, shaft, hub, nose, vane-a, vane-b, vane-c, vane-d]
+    body: Slide the 8mm shaft through the nose, both arms, the hub, then the head. Glue the nose and the hub to the shaft. Sand the head hole until the sails turn. The sails stay in front of the mast.
+    show: [base, mast, head, shaft, hub, nose, arm-h, arm-v]
     join:
       - from: shaft
         into: head.shaft
@@ -166,12 +166,12 @@ steps:
 
   - id: spin-check
     title: Check the spin
-    body: You should have a tower on the base, a little head on top, and four sails in front. Blow on the sails — they should turn without hitting the mast or the base. If the hole binds, sand it. Compare it to the finished picture in the corner.
-    show: [base, mast, head, shaft, hub, nose, vane-a, vane-b, vane-c, vane-d]
+    body: You should have a tower on the base, a little head on top, and a sail cross in front. Blow on the sails — they should turn without hitting the mast or the base. If the hole binds, sand it. Compare it to the finished picture in the corner.
+    show: [base, mast, head, shaft, hub, nose, arm-h, arm-v]
 
   - id: paint
     title: Paint it (optional)
-    body: "Sand every edge soft. Paint the base green for grass, the mast cream and the head red. Paint the sails blue and white, and the hub and nose yellow. Keep paint off the shaft so it still turns. Let each colour dry before the next."
-    show: [base, mast, head, shaft, hub, nose, vane-a, vane-b, vane-c, vane-d]
+    body: "Sand every edge soft. Paint the base green for grass, the mast cream and the head red. Paint the flat sail blue and the upright one white, and the hub and nose yellow. Keep paint off the shaft so it still turns. Let each colour dry before the next."
+    show: [base, mast, head, shaft, hub, nose, arm-h, arm-v]
     paint: true
     adult: false

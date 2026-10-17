@@ -36,8 +36,11 @@ const planLoads = new Map<string, Promise<PlanState>>();
 
 function fetchCatalog(): Promise<CatalogEntry[]> {
   catalogLoad ??= fetch("/plans/catalog.json")
-    .then((r) => (r.ok ? (r.json() as Promise<CatalogEntry[]>) : []))
-    .catch(() => []);
+    .then((r) => (r.ok ? (r.json() as Promise<CatalogEntry[]>) : Promise.reject(new Error(String(r.status)))))
+    .catch(() => {
+      catalogLoad = undefined; // a network blip should not stick until reload
+      return [];
+    });
   return catalogLoad;
 }
 
@@ -47,7 +50,10 @@ function fetchPlan(file: string): Promise<PlanState> {
     hit = fetch(`/plans/${file}`)
       .then((r) => (r.ok ? r.text() : Promise.reject(new Error(String(r.status)))))
       .then((text): PlanState => ({ ...loadPlanText(text), status: "ready" }))
-      .catch((): PlanState => ({ diagnostics: [], status: "missing" }));
+      .catch((): PlanState => {
+        planLoads.delete(file);
+        return { diagnostics: [], status: "missing" };
+      });
     planLoads.set(file, hit);
   }
   return hit;

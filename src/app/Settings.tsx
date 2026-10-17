@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Icon } from "./ui";
 
 export type Settings = {
@@ -61,16 +61,27 @@ function Choice<T extends string>({
   options: [T, string][];
   onChange: (v: T) => void;
 }) {
+  function arrow(e: KeyboardEvent<HTMLDivElement>) {
+    const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
+    if (!step) return;
+    e.preventDefault();
+    const i = options.findIndex(([v]) => v === value);
+    const next = options[(i + step + options.length) % options.length][0];
+    onChange(next);
+    e.currentTarget.querySelector<HTMLButtonElement>(`[data-v="${next}"]`)?.focus();
+  }
   return (
     <div className="setting" role="radiogroup" aria-label={label}>
       <span className="setting-name">{label}</span>
-      <div className="seg">
+      <div className="seg" onKeyDown={arrow}>
         {options.map(([v, text]) => (
           <button
             key={v}
+            data-v={v}
             type="button"
             role="radio"
             aria-checked={value === v}
+            tabIndex={value === v ? 0 : -1}
             className={value === v ? "on" : ""}
             onClick={() => onChange(v)}
           >
@@ -128,6 +139,7 @@ export function SettingsButton() {
           if (e.target === dialog.current) dialog.current?.close();
         }}
       >
+        <div className="sheet-body">
         <div className="sheet-head">
           <h2 id="settings-title">Settings</h2>
           <button type="button" className="btn btn-ghost btn-icon" aria-label="Close" onClick={() => dialog.current?.close()}>
@@ -173,6 +185,7 @@ export function SettingsButton() {
           onChange={(grid) => set({ grid })}
         />
         <p className="setting-foot">Saved on this device only.</p>
+        </div>
       </dialog>
     </>
   );

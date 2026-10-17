@@ -10,9 +10,10 @@
   --ink-soft: #6a4b34;
   --line: #dac6a2;
   --line-strong: #8a6540;
-  --accent: #c4500c;
+  --accent: #a84008;
   --accent-ink: #ffffff;
   --accent-soft: #f6d9bf;
+  --tick: #a58c64;
   --next: #1f6feb;
   --focus: #1f6feb;
   --easy: #1f6b34;
@@ -39,10 +40,11 @@
   --ink: #f4e8d2;
   --ink-soft: #cdb593;
   --line: #4a3526;
-  --line-strong: #8f6d4a;
+  --line-strong: #a9825a;
   --accent: #f08a3c;
   --accent-ink: #1a0e05;
   --accent-soft: #4a2c16;
+  --tick: #8a6e52;
   --next: #6aa4ff;
   --focus: #8db8ff;
   --easy: #8fdc9c;
@@ -70,10 +72,11 @@
     --ink: #f4e8d2;
     --ink-soft: #cdb593;
     --line: #4a3526;
-    --line-strong: #8f6d4a;
+    --line-strong: #a9825a;
     --accent: #f08a3c;
     --accent-ink: #1a0e05;
     --accent-soft: #4a2c16;
+  --tick: #8a6e52;
     --next: #6aa4ff;
     --focus: #8db8ff;
     --easy: #8fdc9c;
@@ -117,7 +120,7 @@ body,
 }
 
 body {
-  font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "Nunito Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   font-size: 1.0625rem;
   line-height: 1.5;
   color: var(--ink);
@@ -130,7 +133,7 @@ h2,
 h3,
 .eyebrow,
 .brand {
-  font-family: "Fraunces", "Iowan Old Style", Georgia, serif;
+  font-family: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
   font-weight: 640;
   line-height: 1.15;
 }
@@ -250,7 +253,7 @@ a {
 }
 
 .chip-small {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0.15rem 0.8rem;
   font-size: 0.85rem;
   background: color-mix(in srgb, var(--surface) 88%, transparent);
@@ -726,6 +729,19 @@ a {
   display: none;
 }
 
+@media (max-width: 480px) {
+  .bench-title .pill {
+    display: none;
+  }
+}
+
+.problems {
+  max-width: 36rem;
+  margin: 1rem auto;
+  padding: 0 0 0 1.2rem;
+  text-align: left;
+}
+
 @media (min-width: 700px) {
   .btn-text {
     display: inline;
@@ -894,7 +910,7 @@ a {
 .overlay-bar p,
 .overlay-bar h2 {
   margin: 0;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: "Fraunces Variable", Georgia, serif;
   font-size: 1.15rem;
   font-weight: 640;
 }
@@ -958,6 +974,19 @@ a {
   cursor: row-resize;
 }
 
+.splitter::before {
+  content: "";
+  position: absolute;
+}
+
+.is-wide > .splitter::before {
+  inset: 0 -12px;
+}
+
+.is-tall > .splitter::before {
+  inset: -12px 0;
+}
+
 .splitter span {
   display: block;
   border-radius: 99px;
@@ -980,6 +1009,7 @@ a {
 }
 
 .step-panel {
+  padding-right: env(safe-area-inset-right);
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -999,26 +1029,26 @@ a {
   position: relative;
   flex: 1;
   min-width: 4px;
-  height: 0.5rem;
+  height: 0.6rem;
   padding: 0;
   border: 0;
   border-radius: 99px;
-  background: var(--line);
+  background: var(--tick);
   cursor: pointer;
 }
 
 .tick::after {
   content: "";
   position: absolute;
-  inset: -0.8rem -2px;
+  inset: -1rem -3px;
 }
 
 .tick.past {
-  background: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: color-mix(in srgb, var(--accent) 60%, var(--tick));
 }
 
 .tick.now {
-  height: 0.7rem;
+  height: 0.8rem;
   margin-block: -0.1rem;
   background: var(--accent);
 }
@@ -1102,7 +1132,7 @@ a {
 .step-parts h3 {
   margin: 0.8rem 0 0.3rem;
   color: var(--ink-soft);
-  font-family: "Nunito", system-ui, sans-serif;
+  font-family: "Nunito Variable", system-ui, sans-serif;
   font-size: 0.8rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1143,7 +1173,7 @@ a {
 }
 
 .done-card strong {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: "Fraunces Variable", Georgia, serif;
   font-size: 1.3rem;
 }
 
@@ -1161,7 +1191,7 @@ a {
 .sheet {
   width: min(32rem, calc(100% - 1.5rem));
   max-height: calc(100dvh - 1.5rem);
-  padding: 1rem 1.3rem 1.3rem;
+  padding: 0;
   overflow: auto;
   border: 0;
   border-radius: 24px;
@@ -1172,6 +1202,10 @@ a {
 
 .sheet::backdrop {
   background: rgb(20 10 4 / 0.55);
+}
+
+.sheet-body {
+  padding: 1rem 1.3rem 1.3rem;
 }
 
 .sheet-head {
