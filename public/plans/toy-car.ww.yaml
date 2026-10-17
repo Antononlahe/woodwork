@@ -9,6 +9,7 @@ finished_size: { x: 130, y: 90, z: 50 }
 parts:
   - id: chassis
     kind: box
+    paint: "#2f6bb5"
     size: { x: 120, y: 50, z: 12 }
     holes:
       - id: axle-front
@@ -24,6 +25,7 @@ parts:
 
   - id: cabin
     kind: box
+    paint: "#d6452f"
     size: { x: 40, y: 40, z: 24 }
 
   - id: axle-front
@@ -37,6 +39,7 @@ parts:
 
   - id: wheel-fl
     kind: disk
+    paint: "#2d2a28"
     diameter: 36
     thickness: 12
     holes:
@@ -47,6 +50,7 @@ parts:
         dir: +z
   - id: wheel-fr
     kind: disk
+    paint: "#2d2a28"
     diameter: 36
     thickness: 12
     holes:
@@ -57,6 +61,7 @@ parts:
         dir: +z
   - id: wheel-rl
     kind: disk
+    paint: "#2d2a28"
     diameter: 36
     thickness: 12
     holes:
@@ -67,6 +72,7 @@ parts:
         dir: +z
   - id: wheel-rr
     kind: disk
+    paint: "#2d2a28"
     diameter: 36
     thickness: 12
     holes:
@@ -146,3 +152,10 @@ steps:
     title: Give it a push
     body: You should have a deck, a cabin, two axles, and four wheels. Set it on the table and push. If a hole binds, sand it. Compare it to the finished picture in the corner.
     show: [chassis, cabin, axle-front, axle-rear, wheel-fl, wheel-fr, wheel-rl, wheel-rr]
+
+  - id: paint
+    title: Paint it (optional)
+    body: "Sand every edge soft. Paint the deck blue and the cabin red. Paint the wheels dark grey, only the rim and tread, never the axle. Let each colour dry before the next, then spin the wheels."
+    show: [chassis, cabin, axle-front, axle-rear, wheel-fl, wheel-fr, wheel-rl, wheel-rr]
+    paint: true
+    adult: false

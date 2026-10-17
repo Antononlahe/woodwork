@@ -9,6 +9,7 @@ finished_size: { x: 120, y: 120, z: 150 }
 parts:
   - id: pad
     kind: box
+    paint: "#6f7e8c"
     size: { x: 70, y: 70, z: 12 }
     holes:
       - id: stick
@@ -24,6 +25,7 @@ parts:
 
   - id: body
     kind: box
+    paint: "#f6f1e4"
     size: { x: 30, y: 30, z: 70 }
     holes:
       - id: stick
@@ -34,26 +36,32 @@ parts:
 
   - id: nose
     kind: disk
+    paint: "#d6452f"
     diameter: 30
     thickness: 12
 
   - id: window
     kind: ring
+    paint: "#2f6bb5"
     outer: 20
     inner: 10
     thickness: 4
 
   - id: fin-e
     kind: box
+    paint: "#d6452f"
     size: { x: 28, y: 4, z: 22 }
   - id: fin-w
     kind: box
+    paint: "#d6452f"
     size: { x: 28, y: 4, z: 22 }
   - id: fin-n
     kind: box
+    paint: "#d6452f"
     size: { x: 4, y: 28, z: 22 }
   - id: fin-s
     kind: box
+    paint: "#d6452f"
     size: { x: 4, y: 28, z: 22 }
 
 assembly:
@@ -125,3 +133,10 @@ steps:
     title: Ready for launch
     body: You should have a pad, a stick, a body with four fins, a window ring, and a nose. It should stand without wobbling. Compare it to the finished picture in the corner. Count down from ten.
     show: [pad, stick, body, nose, window, fin-e, fin-w, fin-n, fin-s]
+
+  - id: paint
+    title: Paint it (optional)
+    body: "Sand every edge soft. Paint the body white, the nose and the four fins red, the window ring blue and the pad grey. Let each colour dry before the next."
+    show: [pad, stick, body, nose, window, fin-e, fin-w, fin-n, fin-s]
+    paint: true
+    adult: false

@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { computeBom } from "../plan/bom";
 import { computeShop } from "../plan/stock";
-import { bakeStepImages } from "../scene/bake";
+import { needsAdult, paintColors } from "../plan/who";
+import { stepImages } from "../scene/snapshot";
+import { Notice, useTitle } from "./ui";
 import { usePlan, type PlanSource } from "./usePlan";
 
 export function PrintView({ local = false }: { local?: boolean }) {
@@ -11,11 +13,12 @@ export function PrintView({ local = false }: { local?: boolean }) {
   const { plan, status } = usePlan(source);
   const [images, setImages] = useState<string[]>([]);
   const back = local ? "/local" : `/p/${id}`;
+  useTitle(plan ? `${plan.title} (print)` : "");
 
   useEffect(() => {
     if (!plan) return;
     let cancelled = false;
-    void bakeStepImages(plan).then((urls) => {
+    void stepImages(plan).then((urls) => {
       if (!cancelled) setImages(urls);
     });
     return () => {
@@ -23,18 +26,28 @@ export function PrintView({ local = false }: { local?: boolean }) {
     };
   }, [plan]);
 
-  if (status === "loading" || !plan) return <div className="page">Preparing print…</div>;
+  if (status === "loading") return <Notice>Preparing print…</Notice>;
+  if (status === "missing" || !plan) {
+    return (
+      <Notice>
+        No plan loaded. <Link to="/">Back to projects</Link>
+      </Notice>
+    );
+  }
 
   const shop = computeShop(plan);
   const bom = computeBom(plan);
+  const colors = paintColors(plan);
   const finished = images[images.length - 1];
   const size = plan.finished_size;
 
   return (
     <div className="print-root">
       <div className="print-toolbar no-print">
-        <Link to={back}>← Bench</Link>
-        <button type="button" className="btn" onClick={() => window.print()}>
+        <Link className="btn btn-ghost" to={back}>
+          ← Bench
+        </Link>
+        <button type="button" className="btn btn-primary" onClick={() => window.print()}>
           Print / Save as PDF
         </button>
       </div>
@@ -44,7 +57,11 @@ export function PrintView({ local = false }: { local?: boolean }) {
         <h1>{plan.title}</h1>
         <p className="lede">{plan.summary}</p>
         <p className="meta">
-          {plan.time_minutes} minutes · {size.x} × {size.y} × {size.z}mm · {plan.difficulty}
+          <span>{plan.time_minutes} minutes</span>
+          <span>
+            {size.x} × {size.y} × {size.z} mm
+          </span>
+          <span>{plan.difficulty}</span>
         </p>
         {finished ? <img src={finished} alt="Finished model" /> : <p>Drawing the finished model…</p>}
       </article>
@@ -72,6 +89,16 @@ export function PrintView({ local = false }: { local?: boolean }) {
             ))}
           </tbody>
         </table>
+        {colors.length > 0 ? (
+          <p>
+            Optional paint:{" "}
+            {colors.map((c) => (
+              <span key={c} className="print-swatch">
+                <i style={{ background: c }} /> {c}
+              </span>
+            ))}
+          </p>
+        ) : null}
       </article>
 
       <article className="page-sheet">
@@ -97,7 +124,7 @@ export function PrintView({ local = false }: { local?: boolean }) {
       {plan.steps.map((step, i) => (
         <article key={step.id} className="page-sheet">
           <p className="eyebrow">
-            Step {i + 1} of {plan.steps.length}
+            Step {i + 1} of {plan.steps.length} · {step.paint ? "optional paint" : needsAdult(step) ? "grown-up job" : "kid job"}
           </p>
           <h2>{step.title}</h2>
           <p>{step.body}</p>

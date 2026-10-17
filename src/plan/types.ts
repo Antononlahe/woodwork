@@ -10,48 +10,17 @@ export type Hole = {
   depth?: number;
 };
 
-export type BoxPart = { id: string; kind: "box"; size: Vec3; holes?: Hole[] };
-export type DowelPart = {
-  id: string;
-  kind: "dowel";
-  diameter: number;
-  length: number;
-  holes?: Hole[];
-};
-export type DiskPart = {
-  id: string;
-  kind: "disk";
-  diameter: number;
-  thickness: number;
-  holes?: Hole[];
-};
-export type RingPart = {
-  id: string;
-  kind: "ring";
-  outer: number;
-  inner: number;
-  thickness: number;
-  holes?: Hole[];
-};
-export type ConePart = { id: string; kind: "cone"; diameter: number; height: number; holes?: Hole[] };
-export type WedgePart = { id: string; kind: "wedge"; size: Vec3; holes?: Hole[] };
-export type ArchPart = {
-  id: string;
-  kind: "arch";
-  size: Vec3;
-  opening: { width: number; height: number };
-  holes?: Hole[];
-};
-export type StairsPart = {
-  id: string;
-  kind: "stairs";
-  width: number;
-  rise: number;
-  run: number;
-  count: number;
-  holes?: Hole[];
-};
-export type MerlonPart = { id: string; kind: "merlon"; size: Vec3; holes?: Hole[] };
+type Base = { id: string; paint?: string; holes?: Hole[] };
+
+export type BoxPart = Base & { kind: "box"; size: Vec3 };
+export type DowelPart = Base & { kind: "dowel"; diameter: number; length: number };
+export type DiskPart = Base & { kind: "disk"; diameter: number; thickness: number };
+export type RingPart = Base & { kind: "ring"; outer: number; inner: number; thickness: number };
+export type ConePart = Base & { kind: "cone"; diameter: number; height: number };
+export type WedgePart = Base & { kind: "wedge"; size: Vec3 };
+export type ArchPart = Base & { kind: "arch"; size: Vec3; opening: { width: number; height: number } };
+export type StairsPart = Base & { kind: "stairs"; width: number; rise: number; run: number; count: number };
+export type MerlonPart = Base & { kind: "merlon"; size: Vec3 };
 export type Part =
   | BoxPart
   | DowelPart
@@ -72,6 +41,10 @@ export type Step = {
   show: string[];
   highlight?: string[];
   join?: Join[];
+  /** Force the grown-up (or kid) badge. Default: guessed from the text. */
+  adult?: boolean;
+  /** Optional paint step: parts show their `paint` colour from here on. */
+  paint?: boolean;
 };
 
 export type Plan = {

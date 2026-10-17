@@ -2,13 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="Step by step 3D woodworking projects for a grown-up and a kid." />
+    <meta name="theme-color" content="#c4500c" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <title>Bench plans</title>
+    <script>
+      // Set the look before first paint so Night mode doesn't flash white.
+      try {
+        var s = JSON.parse(localStorage.getItem("woodwork.settings") || "{}");
+        document.documentElement.dataset.theme = s.theme || "auto";
+        document.documentElement.dataset.text = s.text || "m";
+      } catch (e) {}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,640&family=IBM+Plex+Mono:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,640&family=IBM+Plex+Mono:wght@400;600&family=Nunito:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
   </head>

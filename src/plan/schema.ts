@@ -30,9 +30,12 @@ const holeSchema = z
     }
   });
 
+const paint = z.string().regex(/^#[0-9a-fA-F]{6}$/, "paint must be #rrggbb").optional();
+
 const boxPart = z.object({
   id: z.string().min(1),
   kind: z.literal("box"),
+  paint,
   size: z.object({
     x: z.number().positive(),
     y: z.number().positive(),
@@ -44,6 +47,7 @@ const boxPart = z.object({
 const dowelPart = z.object({
   id: z.string().min(1),
   kind: z.literal("dowel"),
+  paint,
   diameter: z.number().positive(),
   length: z.number().positive(),
   holes: z.array(holeSchema).optional(),
@@ -52,6 +56,7 @@ const dowelPart = z.object({
 const diskPart = z.object({
   id: z.string().min(1),
   kind: z.literal("disk"),
+  paint,
   diameter: z.number().positive(),
   thickness: z.number().positive(),
   holes: z.array(holeSchema).optional(),
@@ -60,6 +65,7 @@ const diskPart = z.object({
 const ringPart = z.object({
   id: z.string().min(1),
   kind: z.literal("ring"),
+  paint,
   outer: z.number().positive(),
   inner: z.number().positive(),
   thickness: z.number().positive(),
@@ -69,6 +75,7 @@ const ringPart = z.object({
 const conePart = z.object({
   id: z.string().min(1),
   kind: z.literal("cone"),
+  paint,
   diameter: z.number().positive(),
   height: z.number().positive(),
   holes: z.array(holeSchema).optional(),
@@ -77,6 +84,7 @@ const conePart = z.object({
 const wedgePart = z.object({
   id: z.string().min(1),
   kind: z.literal("wedge"),
+  paint,
   size: z.object({
     x: z.number().positive(),
     y: z.number().positive(),
@@ -88,6 +96,7 @@ const wedgePart = z.object({
 const archPart = z.object({
   id: z.string().min(1),
   kind: z.literal("arch"),
+  paint,
   size: z.object({
     x: z.number().positive(),
     y: z.number().positive(),
@@ -103,6 +112,7 @@ const archPart = z.object({
 const stairsPart = z.object({
   id: z.string().min(1),
   kind: z.literal("stairs"),
+  paint,
   width: z.number().positive(),
   rise: z.number().positive(),
   run: z.number().positive(),
@@ -113,6 +123,7 @@ const stairsPart = z.object({
 const merlonPart = z.object({
   id: z.string().min(1),
   kind: z.literal("merlon"),
+  paint,
   size: z.object({
     x: z.number().positive(),
     y: z.number().positive(),
@@ -162,6 +173,8 @@ export const planSchema: z.ZodType<Plan> = z
         body: z.string().min(1),
         show: z.array(z.string().min(1)).min(1),
         highlight: z.array(z.string().min(1)).optional(),
+        adult: z.boolean().optional(),
+        paint: z.boolean().optional(),
         join: z
           .array(
             z.object({

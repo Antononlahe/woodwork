@@ -3,6 +3,7 @@ import {
   BufferGeometry,
   ConeGeometry,
   CylinderGeometry,
+  EdgesGeometry,
   Float32BufferAttribute,
   Vector3,
 } from "three";
@@ -13,6 +14,8 @@ import type { AxisDir, Hole, Part, Vec3 } from "../plan/types";
 export type BuiltPart = {
   geometry: BufferGeometry;
   extras: BufferGeometry[];
+  /** Crisp outline of the uncut solid. EdgesGeometry on CSG output draws stray triangle lines. */
+  outline: BufferGeometry;
 };
 
 function yamlToThree(v: Vec3): Vector3 {
@@ -146,6 +149,7 @@ function holeBrush(part: Part, hole: Hole): Brush {
 
 function subtractHoles(solid: BufferGeometry, part: Part): BuiltPart {
   const extras: BufferGeometry[] = [];
+  const outline = new EdgesGeometry(solid, 25);
   const holes = [...(part.holes ?? [])];
   if (part.kind === "ring") {
     holes.unshift({
@@ -156,7 +160,7 @@ function subtractHoles(solid: BufferGeometry, part: Part): BuiltPart {
       through: true,
     });
   }
-  if (holes.length === 0) return { geometry: solid, extras };
+  if (holes.length === 0) return { geometry: solid, extras, outline };
 
   try {
     const evaluator = new Evaluator();
@@ -168,14 +172,15 @@ function subtractHoles(solid: BufferGeometry, part: Part): BuiltPart {
     const geometry = result.geometry;
     geometry.deleteAttribute("normal");
     geometry.computeVertexNormals();
-    return { geometry, extras };
+    return { geometry, extras, outline };
   } catch {
     for (const hole of holes) extras.push(holeBrush(part, hole).geometry);
-    return { geometry: solid, extras };
+    return { geometry: solid, extras, outline };
   }
 }
 
-export function woodColor(part: Part): string {
+export function woodColor(part: Part, painted = false): string {
+  if (painted && part.paint) return part.paint;
   if (part.kind === "dowel") return "#c4a574";
   if (part.kind === "ring") return "#b08968";
   if (part.kind === "disk") return "#c9a27a";
@@ -189,4 +194,17 @@ export function woodColor(part: Part): string {
 
 export function buildPart(part: Part): BuiltPart {
   return subtractHoles(solidGeometry(part), part);
+}
+
+// Parts are plain objects from one parsed plan, so identity is a safe key.
+const built = new WeakMap<Part, BuiltPart>();
+
+/** CSG is slow: build each part once for the scene, thumbnails and print. */
+export function buildPartCached(part: Part): BuiltPart {
+  let hit = built.get(part);
+  if (!hit) {
+    hit = buildPart(part);
+    built.set(part, hit);
+  }
+  return hit;
 }

@@ -15,3 +15,11 @@ test("rejects unknown format", () => {
   expect(plan).toBeUndefined();
   expect(diagnostics.some((d) => d.code === "schema")).toBe(true);
 });
+
+test("paint must be #rrggbb", () => {
+  const text = readFileSync("src/test/fixtures/ok-minimal.ww.yaml", "utf8");
+  const ok = parsePlanYaml(text.replace("kind: box", 'kind: box\n    paint: "#aa22cc"'));
+  expect(ok.diagnostics.filter((d) => d.level === "error")).toEqual([]);
+  const bad = parsePlanYaml(text.replace("kind: box", "kind: box\n    paint: red"));
+  expect(bad.plan).toBeUndefined();
+});

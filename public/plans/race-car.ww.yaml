@@ -1,0 +1,301 @@
+format: woodwork/v0
+id: race-car
+title: Race car
+summary: A low red racer with a driver, a rear wing, headlights and four wheels that really turn.
+difficulty: medium
+time_minutes: 120
+finished_size: { x: 158, y: 94, z: 56 }
+iso_from: { x: 1, y: -1, z: 0.8 }
+
+parts:
+  - id: chassis
+    kind: box
+    paint: "#d6452f"
+    size: { x: 150, y: 56, z: 12 }
+    holes:
+      - id: axle-rear
+        diameter: 8
+        through: true
+        at: { x: 32, y: 0, z: 6 }
+        dir: +y
+      - id: axle-front
+        diameter: 8
+        through: true
+        at: { x: 118, y: 0, z: 6 }
+        dir: +y
+
+  - id: tub
+    kind: box
+    paint: "#d6452f"
+    size: { x: 50, y: 48, z: 14 }
+
+  - id: hood
+    kind: box
+    paint: "#d6452f"
+    size: { x: 60, y: 44, z: 10 }
+
+  - id: helmet
+    kind: disk
+    paint: "#f2bd2b"
+    diameter: 20
+    thickness: 16
+
+  - id: post-l
+    kind: box
+    paint: "#2d2a28"
+    size: { x: 6, y: 6, z: 18 }
+
+  - id: post-r
+    kind: box
+    paint: "#2d2a28"
+    size: { x: 6, y: 6, z: 18 }
+
+  - id: wing
+    kind: box
+    paint: "#2f6bb5"
+    size: { x: 22, y: 56, z: 4 }
+
+  - id: bumper
+    kind: box
+    paint: "#2d2a28"
+    size: { x: 8, y: 56, z: 8 }
+
+  - id: light-l
+    kind: disk
+    paint: "#f6e27a"
+    diameter: 10
+    thickness: 4
+
+  - id: light-r
+    kind: disk
+    paint: "#f6e27a"
+    diameter: 10
+    thickness: 4
+
+  - id: number-l
+    kind: disk
+    paint: "#f6f1e4"
+    diameter: 16
+    thickness: 2
+
+  - id: number-r
+    kind: disk
+    paint: "#f6f1e4"
+    diameter: 16
+    thickness: 2
+
+  - id: axle-rear
+    kind: dowel
+    diameter: 8
+    length: 88
+
+  - id: axle-front
+    kind: dowel
+    diameter: 8
+    length: 88
+
+  - id: wheel-rl
+    kind: disk
+    paint: "#2d2a28"
+    diameter: 40
+    thickness: 12
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+
+  - id: wheel-rr
+    kind: disk
+    paint: "#2d2a28"
+    diameter: 40
+    thickness: 12
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+
+  - id: cap-rl
+    kind: disk
+    paint: "#c9c3b4"
+    diameter: 18
+    thickness: 3
+
+  - id: cap-rr
+    kind: disk
+    paint: "#c9c3b4"
+    diameter: 18
+    thickness: 3
+
+  - id: wheel-fl
+    kind: disk
+    paint: "#2d2a28"
+    diameter: 40
+    thickness: 12
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+
+  - id: wheel-fr
+    kind: disk
+    paint: "#2d2a28"
+    diameter: 40
+    thickness: 12
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+
+  - id: cap-fl
+    kind: disk
+    paint: "#c9c3b4"
+    diameter: 18
+    thickness: 3
+
+  - id: cap-fr
+    kind: disk
+    paint: "#c9c3b4"
+    diameter: 18
+    thickness: 3
+
+assembly:
+  - part: chassis
+    at: { x: 0, y: 0, z: 14 }
+  - part: tub
+    at: { x: 30, y: 4, z: 26 }
+  - part: hood
+    at: { x: 80, y: 6, z: 26 }
+  - part: helmet
+    at: { x: 55, y: 28, z: 48 }
+  - part: post-l
+    at: { x: 6, y: 6, z: 26 }
+  - part: post-r
+    at: { x: 6, y: 44, z: 26 }
+  - part: wing
+    at: { x: 0, y: 0, z: 44 }
+  - part: bumper
+    at: { x: 150, y: 0, z: 15 }
+  - part: light-l
+    at: { x: 142, y: 14, z: 31 }
+    rot: { x: 0, y: 90, z: 0 }
+  - part: light-r
+    at: { x: 142, y: 42, z: 31 }
+    rot: { x: 0, y: 90, z: 0 }
+  - part: number-l
+    at: { x: 55, y: 3, z: 33 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: number-r
+    at: { x: 55, y: 53, z: 33 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: axle-rear
+    at: { x: 32, y: -16, z: 20 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: axle-front
+    at: { x: 118, y: -16, z: 20 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: wheel-rl
+    at: { x: 32, y: -10, z: 20 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: wheel-rr
+    at: { x: 32, y: 66, z: 20 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: cap-rl
+    at: { x: 32, y: -17.5, z: 20 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: cap-rr
+    at: { x: 32, y: 73.5, z: 20 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: wheel-fl
+    at: { x: 118, y: -10, z: 20 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: wheel-fr
+    at: { x: 118, y: 66, z: 20 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: cap-fl
+    at: { x: 118, y: -17.5, z: 20 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: cap-fr
+    at: { x: 118, y: 73.5, z: 20 }
+    rot: { x: -90, y: 0, z: 0 }
+
+steps:
+  - id: cut-chassis
+    title: "Cut the chassis"
+    body: "Cut a 150 by 56mm deck from 12mm vineer. Drill two 8mm holes right through the width for the axles, 32mm and 118mm from the back. Drill from both sides so the bit meets in the middle."
+    show: [chassis]
+    highlight: [chassis.axle-rear, chassis.axle-front]
+
+  - id: cut-wheels
+    title: "Cut four wheels"
+    body: "Cut four 40mm disks from 12mm vineer with a jigsaw. Sand them round. Drill an 8mm hole through the middle of each."
+    show: [wheel-rl]
+    highlight: [wheel-rl.bore]
+
+  - id: rear-axle
+    title: "Fit the rear axle"
+    body: "Slide an 8mm axle through one wheel, the chassis, then the other wheel. Glue each wheel on, leaving a sliver of air so they do not rub the deck. Sand the chassis hole until the axle spins."
+    show: [chassis, axle-rear, wheel-rl, wheel-rr]
+    join:
+      - from: axle-rear
+        into: chassis.axle-rear
+      - from: axle-rear
+        into: wheel-rl.bore
+      - from: axle-rear
+        into: wheel-rr.bore
+
+  - id: front-axle
+    title: "Fit the front axle"
+    body: "Same again at the front. Both pairs of wheels should turn freely and the car should sit level."
+    show: [chassis, axle-rear, axle-front, wheel-rl, wheel-rr, wheel-fl, wheel-fr]
+    join:
+      - from: axle-front
+        into: chassis.axle-front
+      - from: axle-front
+        into: wheel-fl.bore
+      - from: axle-front
+        into: wheel-fr.bore
+
+  - id: cockpit
+    title: "Cockpit and driver"
+    body: "Cut a 50 by 48 by 14mm block for the cockpit and glue it behind the middle of the deck. Cut a 20mm disk, 16mm thick, for the driver's helmet and glue it on top."
+    show: [chassis, axle-rear, axle-front, wheel-rl, wheel-rr, wheel-fl, wheel-fr, tub, helmet]
+
+  - id: hood
+    title: "Add the hood"
+    body: "Cut a 60 by 44 by 10mm block. Glue it on the deck in front of the cockpit, flush with the cockpit wall."
+    show: [chassis, axle-rear, axle-front, wheel-rl, wheel-rr, wheel-fl, wheel-fr, tub, helmet, hood]
+
+  - id: wing
+    title: "Build the rear wing"
+    body: "Cut two 6 by 6 by 18mm posts and glue them at the back corners. Cut a 22 by 56 by 4mm wing and glue it across the tops of the posts."
+    show: [chassis, axle-rear, axle-front, wheel-rl, wheel-rr, wheel-fl, wheel-fr, tub, hood, helmet, hood, post-l, post-r, wing]
+
+  - id: front
+    title: "Bumper and lights"
+    body: "Glue an 8 by 56 by 8mm bumper on the front edge. Cut two 10mm disks, 4mm thick, for headlights and glue them on the front of the hood."
+    show: [chassis, axle-rear, axle-front, wheel-rl, wheel-rr, wheel-fl, wheel-fr, tub, helmet, hood, post-l, post-r, wing, bumper, light-l, light-r]
+
+  - id: details
+    title: "Hubcaps and numbers"
+    body: "Cut four 18mm disks from 3mm vineer for hubcaps and glue one on each wheel over the axle end. Cut two 16mm disks and glue them on the sides of the cockpit for the race number."
+    show: [chassis, tub, hood, helmet, post-l, post-r, wing, bumper, light-l, light-r, number-l, number-r, axle-rear, axle-front, wheel-rl, wheel-rr, cap-rl, cap-rr, wheel-fl, wheel-fr, cap-fl, cap-fr]
+
+  - id: roll
+    title: "Test roll"
+    body: "Give it a push. All four wheels should turn and the wing should clear the back wheels. If a wheel rubs, sand the gap. Compare it to the finished picture in the corner."
+    show: [chassis, tub, hood, helmet, post-l, post-r, wing, bumper, light-l, light-r, number-l, number-r, axle-rear, axle-front, wheel-rl, wheel-rr, cap-rl, cap-rr, wheel-fl, wheel-fr, cap-fl, cap-fr]
+
+  - id: paint
+    title: "Paint it (optional)"
+    body: "Sand every edge soft. Paint the body red, the wing blue, the wheels black and the helmet yellow. Paint the number white and the hubcaps silver. Keep paint off the axles so the wheels still turn."
+    show: [chassis, tub, hood, helmet, post-l, post-r, wing, bumper, light-l, light-r, number-l, number-r, axle-rear, axle-front, wheel-rl, wheel-rr, cap-rl, cap-rr, wheel-fl, wheel-fr, cap-fl, cap-fr]
+    paint: true
+    adult: false

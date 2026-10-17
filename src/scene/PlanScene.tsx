@@ -1,11 +1,12 @@
-import { Edges, Grid, Line, OrbitControls, OrthographicCamera, PerspectiveCamera } from "@react-three/drei";
+import { ContactShadows, Grid, Line, OrbitControls, OrthographicCamera, PerspectiveCamera } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useMemo } from "react";
 import { DoubleSide } from "three";
 import { worldAabb } from "../plan/aabb";
 import type { Plan } from "../plan/types";
-import { buildPart, woodColor } from "./buildPart";
+import { buildPartCached, woodColor, type BuiltPart } from "./buildPart";
 import { FitCamera } from "./FitCamera";
+import { grainTexture } from "./look";
 import { assemblyPosition, assemblyQuaternion } from "./pose";
 import { PartDimensions } from "./Dimensions";
 import { currentIds, dimensionedIds, highlightedHoleIds, incomingIds, visibleIds } from "./stepView";
@@ -23,25 +24,30 @@ type PlanSceneProps = {
   showGrid?: boolean;
   interactive?: boolean;
   showDimensions?: boolean;
+  /** Use each part's `paint` colour where it has one. */
+  painted?: boolean;
 };
 
 function Assembly({
   plan,
   stepIndex,
   showDimensions,
+  painted,
 }: {
   plan: Plan;
   stepIndex: number;
   showDimensions: boolean;
+  painted: boolean;
 }) {
+  const grain = grainTexture() ?? null;
   const show = visibleIds(plan, stepIndex);
   const incoming = incomingIds(plan, stepIndex);
   const current = currentIds(plan, stepIndex);
   const measured = dimensionedIds(plan, stepIndex);
   const byId = useMemo(() => new Map(plan.parts.map((p) => [p.id, p])), [plan]);
   const built = useMemo(() => {
-    const map = new Map<string, ReturnType<typeof buildPart>>();
-    for (const part of plan.parts) map.set(part.id, buildPart(part));
+    const map = new Map<string, BuiltPart>();
+    for (const part of plan.parts) map.set(part.id, buildPartCached(part));
     return map;
   }, [plan]);
 
@@ -65,6 +71,7 @@ function Assembly({
               ) : isNow ? (
                 <meshStandardMaterial
                   color="#f0c48a"
+                  map={grain}
                   roughness={0.58}
                   metalness={0}
                   emissive={NOW}
@@ -72,11 +79,23 @@ function Assembly({
                   side={DoubleSide}
                 />
               ) : (
-                <meshStandardMaterial color={woodColor(part)} roughness={0.72} metalness={0} side={DoubleSide} />
+                <meshStandardMaterial
+                  color={woodColor(part, painted)}
+                  map={grain}
+                  roughness={painted && part.paint ? 0.5 : 0.78}
+                  metalness={0}
+                  side={DoubleSide}
+                />
               )}
-              {isIncoming ? <Edges color={NEXT} threshold={18} /> : null}
-              {isNow ? <Edges color={NOW} threshold={18} /> : null}
             </mesh>
+            <lineSegments geometry={mesh.outline}>
+              <lineBasicMaterial
+                color={isIncoming ? NEXT : isNow ? NOW : "#4a2c1a"}
+                transparent
+                opacity={isIncoming || isNow ? 1 : 0.35}
+                toneMapped={false}
+              />
+            </lineSegments>
             {showDimensions && !isIncoming ? (
               <PartDimensions
                 part={part}
@@ -153,9 +172,12 @@ export function PlanScene({
   showGrid = true,
   interactive = true,
   showDimensions = true,
+  painted = false,
 }: PlanSceneProps) {
+  const { x, y, z } = plan.finished_size;
+  const span = Math.max(x, y, z);
   return (
-    <Canvas gl={{ antialias: true, preserveDrawingBuffer: true }} style={{ background: "#e8d7b8" }}>
+    <Canvas className="scene" frameloop="demand" dpr={[1, 2]} gl={{ antialias: true }} style={{ background: "var(--stage)" }}>
       {view === "orbit" ? (
         <PerspectiveCamera makeDefault position={[180, 160, 180]} fov={38} near={0.1} far={4000} />
       ) : (
@@ -165,7 +187,8 @@ export function PlanScene({
       <hemisphereLight args={["#fff4dd", "#c4a574", 0.55]} />
       <directionalLight position={[120, 220, 80]} intensity={0.85} />
       <directionalLight position={[-80, 80, -40]} intensity={0.35} />
-      <Assembly plan={plan} stepIndex={stepIndex} showDimensions={showDimensions} />
+      <Assembly plan={plan} stepIndex={stepIndex} showDimensions={showDimensions} painted={painted} />
+      <ContactShadows position={[x / 2, -0.4, -y / 2]} scale={span * 2.2} far={z + 20} blur={2.6} opacity={0.38} resolution={512} />
       {showDimensions &&
       stepIndex < plan.steps.length - 1 &&
       dimensionedIds(plan, stepIndex).size === 0 ? (

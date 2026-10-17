@@ -1,0 +1,10 @@
+{
+  "name": "Bench plans",
+  "short_name": "Bench plans",
+  "description": "Step by step 3D woodworking projects for a grown-up and a kid.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6efe0",
+  "theme_color": "#c4500c",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

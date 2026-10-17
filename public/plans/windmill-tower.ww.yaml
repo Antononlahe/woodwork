@@ -1,0 +1,388 @@
+format: woodwork/v0
+id: windmill-tower
+title: Tower windmill
+summary: A tall tapered tower, a pitched cap, four big sails and two trees. The sails really turn.
+difficulty: hard
+time_minutes: 160
+finished_size: { x: 140, y: 140, z: 185 }
+iso_from: { x: 1, y: -1, z: 0.8 }
+
+parts:
+  - id: base
+    kind: box
+    paint: "#5f9a4a"
+    size: { x: 140, y: 140, z: 12 }
+    holes:
+      - id: pin
+        diameter: 8
+        depth: 8
+        at: { x: 70, y: 70, z: 12 }
+        dir: -z
+      - id: tree-a
+        diameter: 8
+        depth: 8
+        at: { x: 22, y: 112, z: 12 }
+        dir: -z
+      - id: tree-b
+        diameter: 8
+        depth: 8
+        at: { x: 118, y: 26, z: 12 }
+        dir: -z
+
+  - id: pin-bottom
+    kind: dowel
+    diameter: 8
+    length: 20
+
+  - id: drum-0
+    kind: disk
+    paint: "#a39e92"
+    diameter: 84
+    thickness: 12
+
+  - id: drum-1
+    kind: disk
+    paint: "#a39e92"
+    diameter: 81
+    thickness: 12
+
+  - id: drum-2
+    kind: disk
+    paint: "#e9dcc0"
+    diameter: 78
+    thickness: 12
+
+  - id: drum-3
+    kind: disk
+    paint: "#e9dcc0"
+    diameter: 75
+    thickness: 12
+
+  - id: drum-4
+    kind: disk
+    paint: "#e9dcc0"
+    diameter: 72
+    thickness: 12
+
+  - id: drum-5
+    kind: disk
+    paint: "#e9dcc0"
+    diameter: 69
+    thickness: 12
+
+  - id: drum-6
+    kind: disk
+    paint: "#e9dcc0"
+    diameter: 66
+    thickness: 12
+
+  - id: drum-7
+    kind: disk
+    paint: "#e9dcc0"
+    diameter: 63
+    thickness: 12
+
+  - id: drum-8
+    kind: disk
+    paint: "#e9dcc0"
+    diameter: 60
+    thickness: 12
+
+  - id: door
+    kind: arch
+    paint: "#7a4a2a"
+    size: { x: 30, y: 6, z: 40 }
+    opening: { width: 14, height: 30 }
+
+  - id: doorstep
+    kind: box
+    paint: "#a39e92"
+    size: { x: 30, y: 14, z: 4 }
+
+  - id: window-a
+    kind: ring
+    paint: "#2f6bb5"
+    thickness: 3
+    outer: 16
+    inner: 8
+
+  - id: window-b
+    kind: ring
+    paint: "#2f6bb5"
+    thickness: 3
+    outer: 16
+    inner: 8
+
+  - id: pin-top
+    kind: dowel
+    diameter: 8
+    length: 14
+
+  - id: head
+    kind: box
+    paint: "#8a5a3c"
+    size: { x: 32, y: 24, z: 28 }
+    holes:
+      - id: pocket
+        diameter: 8
+        depth: 10
+        at: { x: 16, y: 12, z: 0 }
+        dir: +z
+      - id: shaft
+        diameter: 8
+        through: true
+        at: { x: 16, y: 0, z: 18 }
+        dir: +y
+
+  - id: roof
+    kind: wedge
+    paint: "#7a3b2a"
+    size: { x: 40, y: 30, z: 14 }
+
+  - id: shaft
+    kind: dowel
+    diameter: 8
+    length: 52
+
+  - id: hub
+    kind: disk
+    paint: "#f2bd2b"
+    diameter: 32
+    thickness: 12
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+
+  - id: nose
+    kind: disk
+    paint: "#d6452f"
+    diameter: 18
+    thickness: 12
+    holes:
+      - id: bore
+        diameter: 8
+        through: true
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+
+  - id: vane-a
+    kind: box
+    paint: "#f6f1e4"
+    size: { x: 55, y: 4, z: 16 }
+
+  - id: vane-b
+    kind: box
+    paint: "#f6f1e4"
+    size: { x: 16, y: 4, z: 55 }
+
+  - id: vane-c
+    kind: box
+    paint: "#f6f1e4"
+    size: { x: 55, y: 4, z: 16 }
+
+  - id: vane-d
+    kind: box
+    paint: "#f6f1e4"
+    size: { x: 16, y: 4, z: 55 }
+
+  - id: trunk-a
+    kind: dowel
+    paint: "#7a4a2a"
+    diameter: 8
+    length: 22
+
+  - id: tree-a
+    kind: cone
+    paint: "#2f7d3a"
+    diameter: 34
+    height: 48
+    holes:
+      - id: trunk
+        diameter: 8
+        depth: 8
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+
+  - id: trunk-b
+    kind: dowel
+    paint: "#7a4a2a"
+    diameter: 8
+    length: 22
+
+  - id: tree-b
+    kind: cone
+    paint: "#2f7d3a"
+    diameter: 34
+    height: 48
+    holes:
+      - id: trunk
+        diameter: 8
+        depth: 8
+        at: { x: 0, y: 0, z: 0 }
+        dir: +z
+
+assembly:
+  - part: base
+    at: { x: 0, y: 0, z: 0 }
+  - part: pin-bottom
+    at: { x: 70, y: 70, z: 4 }
+  - part: drum-0
+    at: { x: 70, y: 70, z: 18 }
+  - part: drum-1
+    at: { x: 70, y: 70, z: 30 }
+  - part: drum-2
+    at: { x: 70, y: 70, z: 42 }
+  - part: drum-3
+    at: { x: 70, y: 70, z: 54 }
+  - part: drum-4
+    at: { x: 70, y: 70, z: 66 }
+  - part: drum-5
+    at: { x: 70, y: 70, z: 78 }
+  - part: drum-6
+    at: { x: 70, y: 70, z: 90 }
+  - part: drum-7
+    at: { x: 70, y: 70, z: 102 }
+  - part: drum-8
+    at: { x: 70, y: 70, z: 114 }
+  - part: door
+    at: { x: 55, y: 22, z: 12 }
+  - part: doorstep
+    at: { x: 55, y: 8, z: 12 }
+  - part: window-a
+    at: { x: 70, y: 32.5, z: 66 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: window-b
+    at: { x: 70, y: 37, z: 100 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: pin-top
+    at: { x: 70, y: 58, z: 116 }
+  - part: head
+    at: { x: 54, y: 46, z: 120 }
+  - part: roof
+    at: { x: 50, y: 43, z: 148 }
+  - part: shaft
+    at: { x: 70, y: 8, z: 138 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: hub
+    at: { x: 70, y: 30, z: 138 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: nose
+    at: { x: 70, y: 18, z: 138 }
+    rot: { x: -90, y: 0, z: 0 }
+  - part: vane-a
+    at: { x: 62, y: 20, z: 130 }
+  - part: vane-b
+    at: { x: 62, y: 20, z: 130 }
+  - part: vane-c
+    at: { x: 23, y: 20, z: 130 }
+  - part: vane-d
+    at: { x: 62, y: 20, z: 91 }
+  - part: trunk-a
+    at: { x: 22, y: 112, z: 4 }
+  - part: tree-a
+    at: { x: 22, y: 112, z: 24 }
+  - part: trunk-b
+    at: { x: 118, y: 26, z: 4 }
+  - part: tree-b
+    at: { x: 118, y: 26, z: 24 }
+
+steps:
+  - id: cut-base
+    title: "Cut the base"
+    body: "Cut a 140mm square from 12mm vineer. Drill three 8mm holes, 8mm deep: one in the exact middle for the tower pin, two out near the corners for the trees."
+    show: [base]
+    highlight: [base.pin, base.tree-a, base.tree-b]
+
+  - id: cut-drums
+    title: "Cut nine drums"
+    body: "Cut nine 12mm disks with a jigsaw. They shrink by 3mm each: 84, 81, 78, 75, 72, 69, 66, 63, 60. Sand the edges round. Stack them in order to see the tower leaning in."
+    show: [drum-0, drum-1, drum-2, drum-3, drum-4, drum-5, drum-6, drum-7, drum-8]
+
+  - id: stack-tower
+    title: "Stack the tower"
+    body: "Glue the 8mm pin in the middle hole. Slide the widest drum on it, then the rest in order, glue between each. Keep the sides lined up. Let it set before moving on."
+    show: [base, pin-bottom, drum-0, drum-1, drum-2, drum-3, drum-4, drum-5, drum-6, drum-7, drum-8]
+    join:
+      - from: pin-bottom
+        into: base.pin
+
+  - id: door
+    title: "Door and step"
+    body: "Cut a 30 by 40mm door frame from 12mm vineer with a 14mm wide arched opening, and saw a 30 by 14mm step. Glue the frame on the front of the tower and the step in front of it."
+    show: [base, pin-bottom, drum-0, drum-1, drum-2, drum-3, drum-4, drum-5, drum-6, drum-7, drum-8, door, doorstep]
+
+  - id: windows
+    title: "Two windows"
+    body: "Cut two small rings from 4mm vineer, 16mm across with an 8mm hole. Glue one on the front of the tower about halfway up, the other near the top."
+    show: [base, pin-bottom, drum-0, drum-1, drum-2, drum-3, drum-4, drum-5, drum-6, drum-7, drum-8, door, doorstep, window-a, window-b]
+
+  - id: cut-head
+    title: "Cut the cap"
+    body: "Cut a 32 by 24 by 28mm block. Drill an 8mm pocket 10mm deep in the bottom. Then drill an 8mm hole right through the sides, near the top, for the shaft."
+    show: [head]
+    highlight: [head.pocket, head.shaft]
+
+  - id: seat-head
+    title: "Seat the cap"
+    body: "Glue the short pin in the top drum, off-centre toward the front. Press the cap on it. The shaft hole should run front to back."
+    show: [base, pin-bottom, drum-0, drum-1, drum-2, drum-3, drum-4, drum-5, drum-6, drum-7, drum-8, pin-top, head]
+    join:
+      - from: pin-top
+        into: head.pocket
+
+  - id: roof
+    title: "Mitre the roof"
+    body: "Mitre a 40 by 30mm roof with a 14mm high ridge running front to back. Glue it on top of the cap, a little over the edges."
+    show: [base, pin-bottom, drum-0, drum-1, drum-2, drum-3, drum-4, drum-5, drum-6, drum-7, drum-8, pin-top, head, roof]
+
+  - id: cut-sails
+    title: "Cut the sails"
+    body: "Cut a 32mm hub and an 18mm nose from 12mm vineer. Drill an 8mm hole through the middle of each. Cut four sails from 4mm vineer, 55 by 16mm."
+    show: [hub, nose, vane-a]
+    highlight: [hub.bore, nose.bore]
+
+  - id: glue-sails
+    title: "Glue the sails"
+    body: "Glue the four sails on the front of the hub in a plus. Two lie flat across, two stand up and down. They overlap in the middle by 16mm."
+    show: [hub, vane-a, vane-b, vane-c, vane-d]
+
+  - id: fit-shaft
+    title: "Fit the shaft"
+    body: "Slide the 8mm shaft through the nose, the hub, then the cap. Glue the hub and the nose to the shaft. Sand the cap hole until the sails turn. The sails must not touch the tower."
+    show: [base, pin-bottom, drum-0, drum-1, drum-2, drum-3, drum-4, drum-5, drum-6, drum-7, drum-8, pin-top, head, roof, door, doorstep, window-a, window-b, shaft, hub, nose, vane-a, vane-b, vane-c, vane-d]
+    join:
+      - from: shaft
+        into: head.shaft
+      - from: shaft
+        into: hub.bore
+      - from: shaft
+        into: nose.bore
+
+  - id: trees
+    title: "Plant two trees"
+    body: "For each tree: glue an 8mm trunk in the base, then press a cone with an 8mm pocket on top. Cut the cones from 12mm vineer, three layers, or ask a grown-up to turn them."
+    show: [base, trunk-a, tree-a, trunk-b, tree-b]
+    join:
+      - from: trunk-a
+        into: base.tree-a
+      - from: trunk-a
+        into: tree-a.trunk
+      - from: trunk-b
+        into: base.tree-b
+      - from: trunk-b
+        into: tree-b.trunk
+
+  - id: spin-check
+    title: "Check the spin"
+    body: "Blow on the sails. They should turn without touching the tower or the cap. If they catch, sand the shaft hole a little. Compare it to the finished picture in the corner."
+    show: [base, pin-bottom, drum-0, drum-1, drum-2, drum-3, drum-4, drum-5, drum-6, drum-7, drum-8, door, doorstep, window-a, window-b, pin-top, head, roof, shaft, hub, nose, vane-a, vane-b, vane-c, vane-d, trunk-a, tree-a, trunk-b, tree-b]
+
+  - id: paint
+    title: "Paint it (optional)"
+    body: "Sand every edge soft. Paint the base green, the tower cream with a grey foot, the roof brown and the cones green. Sails white, hub yellow, nose red. Keep paint off the shaft so it still turns."
+    show: [base, pin-bottom, drum-0, drum-1, drum-2, drum-3, drum-4, drum-5, drum-6, drum-7, drum-8, door, doorstep, window-a, window-b, pin-top, head, roof, shaft, hub, nose, vane-a, vane-b, vane-c, vane-d, trunk-a, tree-a, trunk-b, tree-b]
+    paint: true
+    adult: false

@@ -1,32 +1,62 @@
 [
   {
-    "id": "tabletop-castle",
-    "title": "Tabletop castle",
-    "file": "tabletop-castle.ww.yaml",
-    "summary": "A detailed curtain-wall fortress. Drum towers, grate, keep, well, shed."
-  },
-  {
     "id": "tabletop-windmill",
     "title": "Tabletop windmill",
     "file": "tabletop-windmill.ww.yaml",
-    "summary": "A small windmill that actually spins."
+    "summary": "A small windmill that actually spins.",
+    "difficulty": "easy",
+    "time_minutes": 50,
+    "family": "windmill"
   },
   {
     "id": "toy-car",
     "title": "Toy car",
     "file": "toy-car.ww.yaml",
-    "summary": "A little wooden car with wheels that roll."
+    "summary": "A little wooden car with wheels that roll.",
+    "difficulty": "easy",
+    "time_minutes": 50,
+    "family": "car"
   },
   {
     "id": "phone-stand",
     "title": "Phone stand",
     "file": "phone-stand.ww.yaml",
-    "summary": "A desk stand that holds a phone and keeps the cable tidy."
+    "summary": "A desk stand that holds a phone and keeps the cable tidy.",
+    "difficulty": "easy",
+    "time_minutes": 40
   },
   {
     "id": "tabletop-rocket",
     "title": "Tabletop rocket",
     "file": "tabletop-rocket.ww.yaml",
-    "summary": "A little wooden rocket on a stick. Fins, a window, a nose."
+    "summary": "A little wooden rocket on a stick. Fins, a window, a nose.",
+    "difficulty": "easy",
+    "time_minutes": 45
+  },
+  {
+    "id": "race-car",
+    "title": "Race car",
+    "file": "race-car.ww.yaml",
+    "summary": "A low red racer with a driver, a rear wing, headlights and four wheels that really turn.",
+    "difficulty": "medium",
+    "time_minutes": 120,
+    "family": "car"
+  },
+  {
+    "id": "windmill-tower",
+    "title": "Tower windmill",
+    "file": "windmill-tower.ww.yaml",
+    "summary": "A tall tapered tower, a pitched cap, four big sails and two trees. The sails really turn.",
+    "difficulty": "hard",
+    "time_minutes": 160,
+    "family": "windmill"
+  },
+  {
+    "id": "tabletop-castle",
+    "title": "Tabletop castle",
+    "file": "tabletop-castle.ww.yaml",
+    "summary": "A detailed curtain-wall fortress. Drum towers, grate, keep, well, shed.",
+    "difficulty": "hard",
+    "time_minutes": 240
   }
 ]

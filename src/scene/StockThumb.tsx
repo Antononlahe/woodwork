@@ -1,57 +1,46 @@
-import { Bounds, OrthographicCamera } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { BoxGeometry, CylinderGeometry } from "three";
+import { BoxGeometry, CylinderGeometry, Group, Mesh, MeshStandardMaterial } from "three";
 import type { ShopLine } from "../plan/types";
+import { objectImage } from "./snapshot";
+import { useImage } from "./useImage";
 
-function PlyMesh() {
-  return (
-    <mesh geometry={new BoxGeometry(70, 6, 50)}>
-      <meshStandardMaterial color="#d4b483" roughness={0.82} />
-    </mesh>
-  );
-}
+const wood = (color: string) => new MeshStandardMaterial({ color, roughness: 0.82 });
 
-function StickMesh({ short }: { short?: boolean }) {
-  const h = short ? 18 : 70;
-  return (
-    <mesh geometry={new CylinderGeometry(4, 4, h, 20)} rotation={[0, 0, short ? 0.4 : 1.15]}>
-      <meshStandardMaterial color="#c4a574" roughness={0.82} />
-    </mesh>
-  );
-}
+type Kind = "ply" | "round" | "pack";
 
-function PackMesh() {
-  return (
-    <group>
-      {[-10, 0, 10].map((x) => (
-        <mesh key={x} position={[x, 0, 0]} geometry={new CylinderGeometry(3.2, 3.2, 22, 16)}>
-          <meshStandardMaterial color="#c4a574" roughness={0.82} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
+const BUILD: Record<Kind, () => Group> = {
+  ply: () => new Group().add(new Mesh(new BoxGeometry(70, 6, 50), wood("#d4b483"))),
+  round: () => {
+    const m = new Mesh(new CylinderGeometry(4, 4, 70, 20), wood("#c4a574"));
+    m.rotation.z = 1.15;
+    return new Group().add(m);
+  },
+  pack: () => {
+    const g = new Group();
+    for (const x of [-10, 0, 10]) {
+      const m = new Mesh(new CylinderGeometry(3.2, 3.2, 22, 16), wood("#c4a574"));
+      m.position.x = x;
+      g.add(m);
+    }
+    return g;
+  },
+};
+
+// Long-lived owners: the picture cache hangs off these.
+const OWNER: Record<Kind, object> = { ply: {}, round: {}, pack: {} };
 
 export function ShopThumb({ line }: { line: ShopLine }) {
-  if (line.kind === "consumable") {
-    const src = line.id === "pva" ? "/prep/pva.jpg" : "/prep/paper.jpg";
-    return <img className="prep-pic" src={src} alt="" />;
-  }
-
-  return (
-    <Canvas gl={{ antialias: true }} style={{ background: "#efe0c2" }}>
-      <OrthographicCamera makeDefault position={[50, 45, 50]} zoom={1} />
-      <ambientLight intensity={0.85} />
-      <directionalLight position={[30, 50, 20]} intensity={1} />
-      <Bounds fit clip observe margin={1.4}>
-        {line.kind === "ply" ? <PlyMesh /> : null}
-        {line.kind === "round" || line.kind === "hobby-round" ? <StickMesh /> : null}
-        {line.kind === "dowel-pack" ? <PackMesh /> : null}
-      </Bounds>
-    </Canvas>
+  const kind: Kind = line.kind === "ply" ? "ply" : line.kind === "dowel-pack" ? "pack" : "round";
+  const photo = line.kind === "consumable";
+  const src = useImage(
+    () => (photo ? Promise.resolve("") : objectImage(OWNER[kind], kind, BUILD[kind])),
+    line.id,
   );
+  if (photo) {
+    return <img className="thumb-img cover" src={line.id === "pva" ? "/prep/pva.jpg" : "/prep/paper.jpg"} alt="" />;
+  }
+  return src ? <img className="thumb-img" src={src} alt="" /> : <span className="thumb-wait" aria-hidden />;
 }
 
 export function ToolThumb({ icon }: { icon: string }) {
-  return <img className="prep-pic" src={`/prep/${icon}.jpg`} alt="" />;
+  return <img className="thumb-img cover" src={`/prep/${icon}.jpg`} alt="" />;
 }

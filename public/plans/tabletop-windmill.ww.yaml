@@ -10,6 +10,7 @@ iso_from: { x: 1, y: 1, z: 0.82 }
 parts:
   - id: base
     kind: box
+    paint: "#5f9a4a"
     size: { x: 80, y: 80, z: 12 }
     holes:
       - id: mast-socket
@@ -20,11 +21,13 @@ parts:
 
   - id: mast
     kind: dowel
+    paint: "#e9dfc6"
     diameter: 8
     length: 140
 
   - id: head
     kind: box
+    paint: "#d6452f"
     size: { x: 32, y: 24, z: 28 }
     holes:
       - id: mast-pocket
@@ -45,6 +48,7 @@ parts:
 
   - id: hub
     kind: disk
+    paint: "#f2bd2b"
     diameter: 32
     thickness: 12
     holes:
@@ -56,6 +60,7 @@ parts:
 
   - id: nose
     kind: disk
+    paint: "#f2bd2b"
     diameter: 18
     thickness: 12
     holes:
@@ -67,15 +72,19 @@ parts:
 
   - id: vane-a
     kind: box
+    paint: "#2f6bb5"
     size: { x: 55, y: 4, z: 16 }
   - id: vane-b
     kind: box
+    paint: "#f6f1e4"
     size: { x: 16, y: 4, z: 55 }
   - id: vane-c
     kind: box
+    paint: "#2f6bb5"
     size: { x: 55, y: 4, z: 16 }
   - id: vane-d
     kind: box
+    paint: "#f6f1e4"
     size: { x: 16, y: 4, z: 55 }
 
 assembly:
@@ -101,7 +110,7 @@ assembly:
   - part: vane-c
     at: { x: -7, y: 6, z: 144 }
   - part: vane-d
-    at: { x: 32, y: 6, z: 97 }
+    at: { x: 32, y: 6, z: 105 }
 
 steps:
   - id: drill-base
@@ -159,3 +168,10 @@ steps:
     title: Check the spin
     body: You should have a tower on the base, a little head on top, and four sails in front. Blow on the sails — they should turn without hitting the mast or the base. If the hole binds, sand it. Compare it to the finished picture in the corner.
     show: [base, mast, head, shaft, hub, nose, vane-a, vane-b, vane-c, vane-d]
+
+  - id: paint
+    title: Paint it (optional)
+    body: "Sand every edge soft. Paint the base green for grass, the mast cream and the head red. Paint the sails blue and white, and the hub and nose yellow. Keep paint off the shaft so it still turns. Let each colour dry before the next."
+    show: [base, mast, head, shaft, hub, nose, vane-a, vane-b, vane-c, vane-d]
+    paint: true
+    adult: false

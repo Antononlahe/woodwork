@@ -18,8 +18,19 @@ function yamlVec(v) {
   return `{ ${bits.join(", ")} }`;
 }
 
+// Optional paint, by id prefix (first match wins). Unlisted parts stay bare wood.
+const PAINT = [
+  ["plate", "#5f9a4a"], ["tw-", "#b7b2a6"], ["tm-", "#a39e92"], ["cap-", "#2f6bb5"], ["flag-", "#d6452f"],
+  ["wall-", "#c9c3b4"], ["gate", "#c9c3b4"], ["walk-", "#8a6a45"], ["bar-", "#3a3a3a"], ["keep-floor", "#8f8a7e"],
+  ["keep-roof", "#b5503a"], ["keep-", "#d9cfb8"], ["well-ring", "#9a968c"], ["well-pit", "#2e5f8a"],
+  ["shed-roof", "#b5503a"], ["shed", "#9c6b3f"], ["stair", "#b3ad9f"], ["stoop", "#a39e92"],
+  ["mw-", "#b3ad9f"], ["me-", "#b3ad9f"], ["mn-", "#b3ad9f"], ["ms-", "#b3ad9f"], ["km-", "#b3ad9f"],
+];
+const paintFor = (id) => PAINT.find(([prefix]) => id.startsWith(prefix))?.[1];
+
 function emitPart(p) {
   let s = `  - id: ${p.id}\n    kind: ${p.kind}\n`;
+  if (paintFor(p.id)) s += `    paint: "${paintFor(p.id)}"\n`;
   if (p.size) s += `    size: ${yamlVec(p.size)}\n`;
   if (p.diameter !== undefined) s += `    diameter: ${p.diameter}\n`;
   if (p.height !== undefined) s += `    height: ${p.height}\n`;
@@ -179,7 +190,6 @@ add({ id: "shed-roof", kind: "wedge", size: { x: 40, y: 32, z: 16 } }, { x: 248,
 add({ id: "stair", kind: "stairs", width: 28, rise: 12, run: 11, count: 7 }, { x: 198, y: 54, z: 12 }, { x: 0, y: 0, z: 90 });
 add({ id: "stoop", kind: "box", size: { x: 50, y: 16, z: 8 } }, { x: 155, y: 20, z: 12 });
 
-const merlonIds = allIds.filter((id) => id.startsWith("mw-") || id.startsWith("me-") || id.startsWith("mn-") || id.startsWith("ms-") || id.startsWith("tm-") || id.startsWith("km-"));
 const towerCourseIds = allIds.filter((id) => id.startsWith("tw-"));
 const barIds = allIds.filter((id) => id.startsWith("bar-"));
 const capIds = allIds.filter((id) => id.startsWith("cap-"));
@@ -272,10 +282,20 @@ const steps = [
     body: "You should have a plate, four drum towers with fighting tops, cones and flags, four walls with an arched grate, merlons, wall walks, a keep with windows and a roof, a well, a shed, a stair, and a stoop. Look through the gate. Compare it to the finished picture in the corner.",
     show: allIds,
   },
+  {
+    id: "paint",
+    title: "Paint the castle (optional)",
+    body: "Sand every edge soft. Paint the lawn green, the towers and walls stone grey, the cones blue and the flags red. Roofs get a clay red, the shed a warm brown, the well water blue. Let each colour dry before the next.",
+    show: allIds,
+    paint: true,
+  },
 ];
 
 function emitStep(st) {
   let s = `  - id: ${st.id}\n    title: ${JSON.stringify(st.title)}\n    body: ${JSON.stringify(st.body)}\n    show: [${st.show.join(", ")}]\n`;
+  if (st.paint) s += `    paint: true
+    adult: false
+`;
   if (st.highlight) s += `    highlight: [${st.highlight.join(", ")}]\n`;
   if (st.join) {
     s += `    join:\n`;

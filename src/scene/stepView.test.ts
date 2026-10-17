@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import type { Plan } from "../plan/types";
-import { currentIds, dimensionedIds, framedIds, incomingIds, visibleIds } from "./stepView";
+import { currentIds, dimensionedIds, firstSeenIds, framedIds, incomingIds, visibleIds } from "./stepView";
 
 const plan: Plan = {
   format: "woodwork/v0",
@@ -52,4 +52,11 @@ test("a middle step highlights only the newly shown part", () => {
   };
   expect(currentIds(three, 1)).toEqual(new Set(["b"]));
   expect(incomingIds(three, 1).size).toBe(0);
+});
+
+test("first seen ignores parts that were shown in an earlier step", () => {
+  expect([...firstSeenIds(plan, 0)]).toEqual(["a"]);
+  expect([...firstSeenIds(plan, 1)]).toEqual(["b"]);
+  const again = { ...plan, steps: [...plan.steps, { id: "s3", title: "3", body: "3", show: ["b", "a"] }] };
+  expect(firstSeenIds(again, 2).size).toBe(0);
 });

@@ -45,9 +45,14 @@ function partKindKey(plan: Plan, id: string): string {
   return `ring|${part.outer}x${part.inner}x${part.thickness}`;
 }
 
-/** Parts that first appear in this step's `show` list. */
+/**
+ * The pieces this step is about: parts shown for the first time, or when assembling
+ * (nothing new), the parts that were not in view in the step before.
+ */
 export function currentIds(plan: Plan, stepIndex: number): Set<string> {
   if (stepIndex >= plan.steps.length - 1) return new Set();
+  const fresh = firstSeenIds(plan, stepIndex);
+  if (fresh.size > 0) return fresh;
   const shown = visibleIds(plan, stepIndex);
   if (!shown) return new Set();
   if (stepIndex === 0) return new Set(shown);
@@ -57,6 +62,13 @@ export function currentIds(plan: Plan, stepIndex: number): Set<string> {
     if (!prev.has(id)) added.add(id);
   }
   return added;
+}
+
+/** Parts shown for the first time in this step (not just re-shown). */
+export function firstSeenIds(plan: Plan, stepIndex: number): Set<string> {
+  const seen = new Set<string>();
+  for (let i = 0; i < stepIndex; i++) for (const id of plan.steps[i].show) seen.add(id);
+  return new Set((plan.steps[stepIndex]?.show ?? []).filter((id) => !seen.has(id)));
 }
 
 /** Solid parts that just appeared this step. One sample per identical size. No ghosts. */

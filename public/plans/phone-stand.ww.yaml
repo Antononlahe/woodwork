@@ -10,6 +10,7 @@ iso_from: { x: 1, y: 1, z: 0.82 }
 parts:
   - id: base
     kind: box
+    paint: "#2f6bb5"
     size: { x: 100, y: 70, z: 12 }
     holes:
       - id: back-a
@@ -35,6 +36,7 @@ parts:
 
   - id: back
     kind: box
+    paint: "#f2bd2b"
     size: { x: 100, y: 12, z: 80 }
     holes:
       - id: peg-a
@@ -55,6 +57,7 @@ parts:
 
   - id: lip
     kind: box
+    paint: "#d6452f"
     size: { x: 100, y: 16, z: 12 }
     holes:
       - id: peg-a
@@ -91,6 +94,7 @@ parts:
 
   - id: tidy
     kind: ring
+    paint: "#f6f1e4"
     outer: 24
     inner: 8
     thickness: 6
@@ -176,3 +180,10 @@ steps:
     title: Park a phone
     body: You should have a base, an upright back, a lip in front, and the cable hook. Stand a phone in the slot. It should lean on the back and stay put. Compare it to the finished picture in the corner.
     show: [base, back, lip, back-peg-a, back-peg-b, lip-peg-a, lip-peg-b, hook, tidy]
+
+  - id: paint
+    title: Paint it (optional)
+    body: "Sand every edge soft. Paint the base blue, the back yellow and the lip red. Leave the pegs and the hook bare wood. Let each colour dry before the next, and keep paint out of the phone slot."
+    show: [base, back, lip, back-peg-a, back-peg-b, lip-peg-a, lip-peg-b, hook, tidy]
+    paint: true
+    adult: false
